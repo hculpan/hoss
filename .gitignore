@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+os-image
 
 # Linker output
 *.ilk

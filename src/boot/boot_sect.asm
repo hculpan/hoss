@@ -37,10 +37,6 @@ load_kernel:
 [bits 32]
 
 BEGIN_PM:
-    call clear_screen
-    mov ebx, MSG_PROT_MODE
-    call print_string
-
     call KERNEL_OFFSET
 
     jmp $
@@ -49,7 +45,6 @@ BEGIN_PM:
 ; Global variables
 BOOT_DRIVE      db  0
 MSG_REAL_MODE   db  "Started in 16-bit Real Mode", 0
-MSG_PROT_MODE   db  "Booting HOSS v0.0.0.1", 0
 MSG_LOAD_KERNEL db  "Loading kernel into memory", 0
 
 times 510-($-$$) db 0
