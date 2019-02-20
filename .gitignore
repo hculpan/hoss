@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+*.bin
 os-image
 
 # Linker output
