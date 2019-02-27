@@ -24,6 +24,9 @@ os-image
 *.la
 *.lo
 
+# Node.js/NPM stuff
+node_modules/
+
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
@@ -52,3 +55,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+

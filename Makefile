@@ -38,3 +38,10 @@ image:
 
 kernel.dis: kernel.bin
 	ndisasm -b 32 $< > $@
+
+blog-deploy: blog-generate
+	cd blog; hexo deploy
+
+blog-generate:
+	cd blog; hexo generate
+	
