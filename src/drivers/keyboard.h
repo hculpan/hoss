@@ -5,4 +5,6 @@
 
 void init_keyboard();
 
+char waitForAscii();
+
 #endif

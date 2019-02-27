@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard src/kernel/*.c src/drivers/*.c src/cpu/*.c src/libc/*.c)
-HEADERS = $(wildcard src/kernel/*.h src/drivers/*.h src/cpu/*.h src/libc/*.h)
+C_SOURCES = $(wildcard src/kernel/*.c src/drivers/*.c src/cpu/*.c src/libc/*.c src/shell/*.c)
+HEADERS = $(wildcard src/kernel/*.h src/drivers/*.h src/cpu/*.h src/libc/*.h src/shell/*.h)
 
 OBJ = ${C_SOURCES:.c=.o src/cpu/interrupt.o}
 
@@ -13,10 +13,10 @@ all: os-image
 run: all
 	qemu-system-i386 -drive file=os-image,index=0,if=floppy,media=disk,format=raw
 
-os-image: src/boot/boot_sect.bin kernel.bin
+os-image: src/boot/boot_sect.bin src/kernel/kernel.bin
 	cat $^ > os-image
 
-kernel.bin: src/kernel/kernel_entry.o ${OBJ}
+src/kernel/kernel.bin: src/kernel/kernel_entry.o ${OBJ}
 	echo ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
 
@@ -27,11 +27,14 @@ kernel.bin: src/kernel/kernel_entry.o ${OBJ}
 	nasm $< -f elf -o $@
 
 %.bin: %.asm
-	nasm $< -f bin -I './16bit' -I './boot' -o $@
+	nasm $< -f bin -I './src/16bit' -I './src/boot' -o $@
 
 clean:
 	rm -fr *.bin *.dis *.o os-image *.map
-	rm -fr src/kernel/*.o src/boot/*.bin src/drivers/*.o src/cpu/*.o src/libc/*.o
+	rm -fr src/kernel/*.o src/boot/*.bin src/drivers/*.o src/cpu/*.o src/libc/*.o src/shell/*.o
+
+image:
+	hdb -i os-image hoss-os.img
 
 kernel.dis: kernel.bin
 	ndisasm -b 32 $< > $@

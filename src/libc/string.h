@@ -17,4 +17,6 @@ int strcmp(char s1[], char s2[]);
 
 void hex_to_ascii(int n, char str[]);
 
+char *strcat(char *dest, const char *src);
+
 #endif

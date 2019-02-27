@@ -59,7 +59,7 @@ int print_char(char character, int col, int row, char attribute_byte) {
         offset = get_cursor_offset();
     }
 
-    if (character == '\n') {
+    if (character == '\n' || character == '\r') {
         row = get_offset_row(offset);
         offset = get_screen_offset(0, row + 1);
     } else {
@@ -75,10 +75,11 @@ int print_char(char character, int col, int row, char attribute_byte) {
 }
 
 void kprint_backspace() {
-    int offset = get_cursor_offset()-2;
+    int offset = get_cursor_offset() - 2;
     int row = get_offset_row(offset);
     int col = get_offset_col(offset);
-    print_char(0x08, col, row, DEFAULT_ATTR);
+    print_char(' ', col, row, DEFAULT_ATTR);
+    set_cursor_offset(offset);
 }
 
 void kprint_at(char *message, int col, int row) {
