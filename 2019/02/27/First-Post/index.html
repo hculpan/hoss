@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="HOSS">
 <meta property="og:description" content="HOSSHarry’s Operating System SoftwareThis is my attempt at writing an operating system.  My ambitions are low.  They do notextend beyond learning, experimenting, and having fun.  Writing a full operat">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-02-27T16:22:11.015Z">
+<meta property="og:updated_time" content="2019-02-27T16:54:59.945Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Introduction to HOSS">
 <meta name="twitter:description" content="HOSSHarry’s Operating System SoftwareThis is my attempt at writing an operating system.  My ambitions are low.  They do notextend beyond learning, experimenting, and having fun.  Writing a full operat">
@@ -96,27 +96,18 @@
 <p>The second big issue for me is that Blundell assumes the reader is<br>using a Linux system.  I am using Mac OS, however.  Much of it<br>worked out of the box (e.g., nasm), but other things did not<br>(e.g., linking multiple files).  For some of the issues, I was able<br>to translate to the Mac, but it became more and more difficult.</p>
 <p>Fortunately, I found a github repository made by [Carlos Fenelossa]<br>(<a href="https://github.com/cfenollosa/os-tutorial)" target="_blank" rel="noopener">https://github.com/cfenollosa/os-tutorial)</a>.  This was a set of<br>tutorials for writing an operating system with the Mac as the<br>development platform.  It was largely based on Blundell’s tutorial,<br>so his code was very compatible with what I already had.  And<br>he had solved most of the problems I was already wrestline with.<br>The only downside was that his tutorials were a little out of date.<br>This only caused one issue, when building the cross-compiler.  The<br>tutorial specified version 4.9 of gcc, and it wasn’t clear to me<br>if this was intentional or just the latest at the time.  But<br>the issue was sort of settled for me, because gcc 4.9 wouldn’t<br>build.  I ended up upgrading to 6.5, and everything worked just fine.</p>
 <p>Like Blundell, Fenelossa’s tutorial isn’t complete.  By the time<br>you finish, you’ll have a booting OS that does basic screen output<br>and can accept all-caps text input, but does nothing with it.  But<br>it’s a very good start, and enough to get me working on a more<br>complete kernel.</p>
+<p>With that done, I can discuss the basic layout of HOSS!</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/27/First-Post/" data-id="cjsnfksh50000wrqbg5vubgrm" class="article-share-link">Share</a>
+      <a data-url="http://hculpan.github.io/hoss/2019/02/27/First-Post/" data-id="cjsndlvzn0001k2qbh7l427uk" class="article-share-link">Share</a>
       
       
     </footer>
   </div>
   
     
-<nav id="article-nav">
-  
-  
-    <a href="/hoss/2019/02/27/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
-    </a>
-  
-</nav>
-
   
 </article>
 
@@ -150,10 +141,6 @@
         
           <li>
             <a href="/hoss/2019/02/27/First-Post/">Introduction to HOSS</a>
-          </li>
-        
-          <li>
-            <a href="/hoss/2019/02/27/hello-world/">Hello World</a>
           </li>
         
       </ul>
