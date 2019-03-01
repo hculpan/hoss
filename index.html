@@ -66,10 +66,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-First-Post" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-A-Command-Shell" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/hoss/2019/02/27/First-Post/" class="article-date">
-  <time datetime="2019-02-27T15:50:01.000Z" itemprop="datePublished">2019-02-27</time>
+    <a href="/hoss/2019/02/28/A-Command-Shell/" class="article-date">
+  <time datetime="2019-02-28T21:16:19.000Z" itemprop="datePublished">2019-02-28</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/02/27/First-Post/">Introduction to HOSS</a>
+      <a class="article-title" href="/hoss/2019/02/28/A-Command-Shell/">A Command Shell</a>
     </h1>
   
 
@@ -88,18 +88,200 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="HOSS"><a href="#HOSS" class="headerlink" title="HOSS"></a>HOSS</h1><h3 id="Harry’s-Operating-System-Software"><a href="#Harry’s-Operating-System-Software" class="headerlink" title="Harry’s Operating System Software"></a>Harry’s Operating System Software</h3><p>This is my attempt at writing an operating system.  My ambitions are low.  They do not<br>extend beyond learning, experimenting, and having fun.  Writing a full operating<br>system has been something I’ve wanted to do for a long time, and for whatever<br>reason I’ve finally decided to do so.</p>
-<p>The original code was based on Nick Blundell’s unfinished book, “Writing a Simple<br>Operating System – from Scratch”.  I found the pdf version online, and found<br>it to be a good, relatively simple (as simple as writing an OS boot loader can<br>be), and thorough introduction to getting an operating system booting on the<br>i386 platform.  The boot code is largely based on this tutorial.</p>
-<p>Blundell’s work had two big problems, however.  First, and most<br>importantly, it wasn’t completed.  In fact, he had entires in the<br>table of contents that had no corresponding text.  Clearly he had<br>meant to write more, but life intrudes for us all.</p>
-<p>The second big issue for me is that Blundell assumes the reader is<br>using a Linux system.  I am using Mac OS, however.  Much of it<br>worked out of the box (e.g., nasm), but other things did not<br>(e.g., linking multiple files).  For some of the issues, I was able<br>to translate to the Mac, but it became more and more difficult.</p>
-<p>Fortunately, I found a github repository made by [Carlos Fenelossa]<br>(<a href="https://github.com/cfenollosa/os-tutorial)" target="_blank" rel="noopener">https://github.com/cfenollosa/os-tutorial)</a>.  This was a set of<br>tutorials for writing an operating system with the Mac as the<br>development platform.  It was largely based on Blundell’s tutorial,<br>so his code was very compatible with what I already had.  And<br>he had solved most of the problems I was already wrestline with.<br>The only downside was that his tutorials were a little out of date.<br>This only caused one issue, when building the cross-compiler.  The<br>tutorial specified version 4.9 of gcc, and it wasn’t clear to me<br>if this was intentional or just the latest at the time.  But<br>the issue was sort of settled for me, because gcc 4.9 wouldn’t<br>build.  I ended up upgrading to 6.5, and everything worked just fine.</p>
-<p>Like Blundell, Fenelossa’s tutorial isn’t complete.  By the time<br>you finish, you’ll have a booting OS that does basic screen output<br>and can accept all-caps text input, but does nothing with it.  But<br>it’s a very good start, and enough to get me working on a more<br>complete kernel.</p>
+        <p>As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple command <code>END</code>.  I refactored that code to move it out of the keyboard driver, paring it down just to what was needed to support the keyboard.  While at this point I obviously don’t have applications or a way for them to call an OS-level API, I still wanted to encapsulate the keyboard so that it would be simple for calling processes to access.</p>
+<p>The result of this is that I refactored all the extraneous code out of the keyboard driver, and originally gave it a new home in the <code>kernel_main</code> function.  But obviously this really isn’t part of the kernel.</p>
+<p>I created a new directory, <code>shell</code>, with a new main file, <code>shell.c</code>.  Thus I started the beginning of my OS’s main command shell.  </p>
+<p>Right now, it’s not much.  It still has the same little typewriter-like functionality that the original keyboard driver had.  But I’ve added a command, <code>scancode</code>, that will put the shell into a mode where it will output the scancode of whatever character is pressed or released.</p>
+<p>While doing this, I also went ahead and addressed some of the shortcomings of my keyboard driver.  I added a <code>waitForScancode</code> function, so a user program can get any key.  I also added flags for the Ctrl, Alt, and CapsLock keys.  The Caps Lock key turned out to be a bit more difficult than I had anticipated.  Unlike the other keys, the Caps Lock really only effects a subset of keys, <code>a</code> through <code>z</code>.  But the numeric keys, for example, aren’t effected.  Even further, if you have Caps Lock enabled but then hold Shift, that reverts a letter to lowercase.  None of this is inherent to the keyboard, of course, and I could have chosen to do it differently in my OS, but I’m a strong believer in standard keyboards.  One of my biggest annoyances when playing with old computers like the Apple II and Commodore 64 is their non-standard keyboards.  So to fully support all this functionality turned out to be a bit trickier than I thought.  My scancode-to-ASCII conversion logic probably doubled in size.  But it wasn’t that big to begin with, so it’s not a big deal.  Just took a number of code-compile-test cycles to finally get it all right.</p>
+<p>The only things left on the keyboard driver are to turn off the Caps Lock indicator on startup (right now, the driver assumes Caps Lock is off), and add application functions for polling.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://hculpan.github.io/hoss/2019/02/28/A-Command-Shell/" data-id="cjsq7dfwa0000ylqb6o4vbzsf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Interfacing-with-the-Keyboard" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/" class="article-date">
+  <time datetime="2019-02-27T19:24:36.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/">Interfacing with the Keyboard</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing with HOSS.</p>
+<p>I started with the basic driver that Fenollosa presented (this being on area where Brundell had a reference in his table of contents but no text).  Really, this was just test code.  It setup a keyboard interrupt handler, converted the scancode into an ASCII character (for the printable ones), put each character in a buffer, and echoed this out to the screen.  If you pressed Enter/Return, it echoed the buffer and then cleared it.  If you typed “END”, it would halt the processor.  It did handle the Shift key, so a 1 was always a 1 even when you held the Shift key; letters were always capital.  But all this code, including displaying the output and processing special characters like Return or Backspace, were handled in the driver.  Obviously this was just test code and not the final state of his keyboard driver, but it was the last bit of such code Fenollosa had in his tutorial, so this is what I had to start with.</p>
+<p>The first thing I added was processing of the Shift key.  The keyboard interface itself doesn’t help you here.  Whenever a key is pressed or released, the keyboard interrupt service routine is called with the scancode of the key (which is different than the ASCII value), but otherwise that’s basically all you get.  So, for example, if someone pressed A, you don’t one value if they’re holding the Shift and another value if they’re not.  You just get the scancode (30 for the A, btw).  When they press the Shift, you get a separate call to the interrupt routine for the Shift key scancode.  So I added a static member to the keyboard driver called <code>shiftPressed</code>, and when the ISR was called with the Shift being pressed, I set this to ON (1).  When it was called with the Shift being raised (indicated by the same scancode + 128), I set this to OFF (0).  Then when the user typed an A, I translated this to <code>A</code> if the shiftPressed was ON and <code>a</code> if the shiftPressed was off.  Technically I did this by having two arrays of characters, with the scancode being the index to the array.  The first was when shiftPressed was OFF; the second when shiftPressed was ON.  This let me easily handle all the printable keys: The letters, numbers, and special characters like <code>$</code> and <code>/</code>.  Though I haven’t actually done so yet, that will be my same approach for the Ctrl and Alt keys.</p>
+<p>At this point, I thought about supporting the Caps Lock key, but there’s a further complication with that.  The keyboard ISR is called when the Caps Lock is pressed and released, but that again has no impact on anything.  Of course, setting up another static variable to track the Caps Lock key is no big deal, but here’s the rub.  The Caps Lock has an LED indicator so the user can determine if it’s on or not.  One can control that using the data port interface of the keyboard, but I just haven’t figured out how to do that yet.  So for the moment the Caps Lock remains unused.</p>
+<p>So after I did the above, it was just a matter of moving all the non-keyboard code out of the driver, and providing a routine for apps to call.  I created one called <code>waitForAscii</code>, which just waits until a printable key is pressed and returns the ASCII value.  It ignores anything like Ctrl or the function keys.  It also doesn’t work with the number pad yet, even though those are printable.  Even though it won’t return a Shift, it does modify the ASCII appropriately based on the status of the Shift key.</p>
+<p>My future plan is to provide a mechanism for polling the keyboard that won’t block, and to give equivalent methods that include extended keys as well.  I also want to add support for the number pad even to the standard ASCII routines.  But these enhancements are for a little ways down the road.  My one blocking method supporting only ASCII keys will serve me for the moment as I begin my next task, building the basics of a command shell.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://hculpan.github.io/hoss/2019/02/27/Interfacing-with-the-Keyboard/" data-id="cjsq7dfwf0002ylqb8l4x9l9j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-The-Screen-Device" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hoss/2019/02/24/The-Screen-Device/" class="article-date">
+  <time datetime="2019-02-24T18:38:53.000Z" itemprop="datePublished">2019-02-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hoss/2019/02/24/The-Screen-Device/">The Screen Device</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="images/screen_output_1.png" alt><br>The screen device driver was the first external device I had to interface with, and much of the code that I used came from either Blundell or Fenelossa, although I certainly added my own changes and refinements.</p>
+<p>The screen device driver was instructive because, while it is simple, it is the first time that you really notice that you’re in 32-bit Protected Mode.  The reason for this is because you lose access to BIOS.  In 16-bit mode, printing out some text on the display is as simple as populating a few registers and calling the appropriate interrupt.  </p>
+<p>Here, for example, is my print_string_16.asm code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">print_string_16:			; Routine: output string in SI to screen</span><br><span class="line">	mov ah, 0Eh		        ; int 10h &apos;print char&apos; function</span><br><span class="line"></span><br><span class="line">.repeat:</span><br><span class="line">	mov al, [bx]</span><br><span class="line">	cmp al, 0</span><br><span class="line">	je .done		        ; If char is zero, end of string</span><br><span class="line">	int 10h			        ; Otherwise, print it</span><br><span class="line">    add bx, 1</span><br><span class="line">	jmp .repeat</span><br><span class="line"></span><br><span class="line">.done:</span><br><span class="line">	ret</span><br></pre></td></tr></table></figure></p>
+<p>If you’re not used to Assembly code, this may be a little difficult to read, but essentially you call the routine by placing the memory address of the string you want to print into the BX register.  The routine then goes character by character, printing each one until it finds a \0 (the standard terminator for a C-style string).  At that point, it returns.  The hard work is done by the BIOS when it calls <code>int 10h</code>, which tells it to display the character in register AL to the screen.</p>
+<p>But the BIOS is 16-bit code, so as soon as you switch to Protected Mode, it’s not accessible.  There are two basic solutions to this.  First, you can switch back to 16-bit mode to call the BIOS, then switch back when you’re done.  Or, second, you can interface with the device using data ports.  The latter option is the one I went with, as the former seemed more difficult.</p>
+<p>When accessing the video in this manner, you can use DMA to write data to the screen.  For a VGA monitor, video memory starts at 0xb8000, so if you want to write an ‘A’ to the upper left corner, you just put an A in that memory address.  Simple.  But each screen location is actually represented by two bytes, not one.  The second byte is the attributes byte, which determines background color, foreground color, and whether it’s blinking.  So to write to the next location on the screen, you’d have to write to location 0xb8002, not 0xb8001.  This method makes a lot of things simpler than the BIOS approach, especially if you want to be able to write text at specific locations on the screen with specific colors and such.  And text wrapping is automatically handled as well.  If you’re text wraps around to the next line, this just happens because the memory is linear.  So 0xb09e is the end of the first line and 0xb0a0 is the first character of the next line.  </p>
+<p>The base routine for this is <code>print_char</code> in drivers/screen.c.  This is a private routine to the device driver, so even the kernel can’t call it.  It’s just the primitive that all the other routines call.  And as with most of the rest of my code at this point, most of it comes from Blundell/Fenollosa.  It basically does of the work of taking a col/row location and converting that to a memory address, and it assigns the character and the attribute byte to the appropriate locations.  </p>
+<p>The other big thing that <code>print_char</code> handles is the location of the cursor.  When a character is printed, <code>print_char</code> will automatically set the cursor to the next location on the screen.  It does this by using the data ports for the VGA display device.  In <code>cpu/ports.c</code> are a set of generic routines to read/write bytes and shorts to device ports.  To change the location of the cursor, it sets the offset (the calculated offset from 0xb8000 based on the column and row) to the device, with the high byte being written to port 0x3d4 and the low byte to 0x3d5.  To find the location of the cursor, it just reads the bytes from thexe same ports.  This feature comes in handy, because then we can provide routines that don’t require a location.  You can print a message to the screen, and the cursor will move to the end of that message.  Then when you print another message, assuming you don’t provide a specific location, it just uses the cursor location to figure out where to put the new message.</p>
+<p>One weakness of writing to video memory, however, is scrolling.  When text hits the bottom of the screen, we expect that the text just scrolls upward.  Using DMA, there’s no easy way to do this.  I wrote a function, handle_scrolling, that simply moves everything in video memory as if it were one line higher, then outputs the new bottom line.</p>
+<p>The only other issue was the backspace.  Fenollosa had a routine, <code>kprint_backspace()</code>, that I largely used as is, but it didn’t seem to quite work for me.  When I tested it, hitting the backspace created an inverse dot character; it didn’t actually backspace.  I fixed that so it blanked out whatever character was then and moved the cursor back one full space.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://hculpan.github.io/hoss/2019/02/24/The-Screen-Device/" data-id="cjsq7dfwh0004ylqbgx4rn2ji" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Structure-of-HOSS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hoss/2019/02/23/Structure-of-HOSS/" class="article-date">
+  <time datetime="2019-02-23T17:04:02.000Z" itemprop="datePublished">2019-02-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hoss/2019/02/23/Structure-of-HOSS/">Structure of HOSS</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="images/dir_structure_1.png" alt><br>As I mentioned in my first post, HOSS is so far very heavily based on two different tutorials.  As a result, my structure largely matches that given in both of these, particularly Fenollosa’s.  </p>
+<p>My boot loader can be found in the /boot subdirectory.  I largely followed Blundell’s tutorial here, with the main code being in boot_sect.asm.  As the extensions suggests, it is written in assembly and is assembled using NASM.  The other files here are just included in the main file, so they will not produce their own object files and thus don’t have to be linked.  One change I made from Blundell’s code is that I named the 16-bit print string procedure print_string_16, and the 32-bit version is just print_string.  At the time I was doing it, I thought I would be using the 32-bit version more, but of course once I boot, I start using the version developed in C (see screen.c in /drivers).</p>
+<p>The boot process works as follows:</p>
+<ol>
+<li>Basic 16-bit setup stuff (e.g., setup stack, print initial message).</li>
+<li>Load next 15 sectors from disk into memory at 0x1000.  This loads the rest of our kernel.  This is just a very simple kernel loader.  It doesn’t know anything about a file system or anything like that.  It just takes all the bytes from the 15 sectors after the first and puts them in memory.  If there aren’t actually 15 sectors (which there aren’t when building just the basic os-image), it just loads as much as it finds.</li>
+<li>Create simple GDT structurs.  This is a flat structure that creates one Data and one Code segment, and both map to the same memory.</li>
+<li>Switch to protected mode.</li>
+<li>Call the kernel entry point, which was loaded in step 2 to memory address 0x1000.</li>
+</ol>
+<p>Once the boot process has completed, the boot loader will hand off control to the kernel, starting with the kernel_main function in kernel/kernel.c.  When the kernel is built, it is compiled to start at an offset of 0x1000 because that’s where the kernel is loaded by the boot process.  And it is compiled without linking any libraries from the development platform.  Thus everything has to be written from scratch without reusing any libraries that one would normally have available with C.  The kernel has it’s process:</p>
+<ol>
+<li>Print out a message so I know it’s started (the kernel equivalent of “Hello, world!”)</li>
+<li>Setup the IDT and the ISR’s.  To be honest, this is probably the one area of the boot/kernel that I am fuzziest on, at so far.  I understand the basic idea of an interrupt and that you need a routine to handle each interrupt.  As I understand the process, the Interrupt Descriptor Table (IDT) is a structure that basically informs the cpu what Interrupt Service Routine (ISR) to call for each interrupt.  Most call the same ISR, a generic routine that just prints out a message.  This is primarily for error interrupts (e.g., invalid opcode or general protection fault) that will never happen because my code never has bugs! :)  Obviously at some point, I’ll need ISR’s to better handle these situations, but for the moment this will do.  The only other important thing that happens here is that I setup an ISR for the timer and the keyboard.  I’ll discuss more about the keyboard in a subsequent post.  As you might imagine, the code for the IDT and ISR configuration comes almost completely unchanged from Blundell.</li>
+<li>A simple test loop that takes keyboard input and echoes it out to the screen.  This will be the beginning of my command shell, but for now it’s in kernel.c.  This routine allows me to test out the screen and keyboard device drivers, which is what I’ll discuss next.</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://hculpan.github.io/hoss/2019/02/23/Structure-of-HOSS/" data-id="cjsq7dfwg0003ylqb4tfgs5yq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-First-Post" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hoss/2019/02/21/First-Post/" class="article-date">
+  <time datetime="2019-02-21T15:50:01.000Z" itemprop="datePublished">2019-02-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hoss/2019/02/21/First-Post/">Introduction to HOSS</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="HOSS"><a href="#HOSS" class="headerlink" title="HOSS"></a>HOSS</h1><h3 id="Harry’s-Operating-System-Software"><a href="#Harry’s-Operating-System-Software" class="headerlink" title="Harry’s Operating System Software"></a>Harry’s Operating System Software</h3><p>This is my attempt at writing an operating system.  My ambitions are low.  They do not extend beyond learning, experimenting, and having fun.  Writing a full operating system has been something I’ve wanted to do for a long time, and for whatever reason I’ve finally decided to do so.</p>
+<p>The original code was based on Nick Blundell’s unfinished book, “Writing a Simple Operating System – from Scratch”.  I found the pdf version online, and found it to be a good, relatively simple (as simple as writing an OS boot loader can be), and thorough introduction to getting an operating system booting on the i386 platform.  The boot code is largely based on this tutorial.</p>
+<p>Blundell’s work had two big problems, however.  First, and most importantly, it wasn’t completed.  In fact, he had entires in the table of contents that had no corresponding text.  Clearly he had meant to write more, but life intrudes for us all.</p>
+<p>The second big issue for me is that Blundell assumes the reader is using a Linux system.  I am using Mac OS, however.  Much of it worked out of the box (e.g., nasm), but other things did not  (e.g., linking multiple files).  For some of the issues, I was able to translate to the Mac, but it became more and more difficult.</p>
+<p>Fortunately, I found a github repository made by <a href="https://github.com/cfenollosa/os-tutorial" target="_blank" rel="noopener">Carlos Fenollosa</a>.  This was a set of tutorials for writing an operating system with the Mac as the development platform.  It was largely based on Blundell’s tutorial, so his code was very compatible with what I already had.  And he had solved most of the problems I was already wrestline with.  The only downside was that his tutorials were a little out of date.  This only caused one issue, when building the cross-compiler.  The tutorial specified version 4.9 of gcc, and it wasn’t clear to me if this was intentional or just the latest at the time.  But the issue was sort of settled for me, because gcc 4.9 wouldn’t build.  I ended up upgrading to 6.5, and everything worked just fine.</p>
+<p>Like Blundell, Fenelossa’s tutorial isn’t complete.  By the time you finish, you’ll have a booting OS that does basic screen output and can accept all-caps text input, but does nothing with it.  But it’s a very good start, and enough to get me working on a more complete kernel.</p>
 <p>With that done, I can discuss the basic layout of HOSS!</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/27/First-Post/" data-id="cjsndlvzn0001k2qbh7l427uk" class="article-share-link">Share</a>
+      <a data-url="http://hculpan.github.io/hoss/2019/02/21/First-Post/" data-id="cjsq7dfwd0001ylqbmr9lfrl4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -140,7 +322,23 @@
       <ul>
         
           <li>
-            <a href="/hoss/2019/02/27/First-Post/">Introduction to HOSS</a>
+            <a href="/hoss/2019/02/28/A-Command-Shell/">A Command Shell</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/">Interfacing with the Keyboard</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/24/The-Screen-Device/">The Screen Device</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/23/Structure-of-HOSS/">Structure of HOSS</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/21/First-Post/">Introduction to HOSS</a>
           </li>
         
       </ul>

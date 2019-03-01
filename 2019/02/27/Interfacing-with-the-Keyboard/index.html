@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Interfacing with the Keyboard | HOSS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Interfacing with the Keyboard">
+<meta property="og:url" content="http://hculpan.github.io/hoss/2019/02/27/Interfacing-with-the-Keyboard/index.html">
+<meta property="og:site_name" content="HOSS">
+<meta property="og:description" content="So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-01T15:16:17.243Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Interfacing with the Keyboard">
+<meta name="twitter:description" content="So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing">
+  
+    <link rel="alternate" href="/hoss/atom.xml" title="HOSS" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/hoss/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/hoss/" id="logo">HOSS</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/hoss/" id="subtitle">Harry&#39;s Operating System Software</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/hoss/">Home</a>
+        
+          <a class="main-nav-link" href="/hoss/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/hoss/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://hculpan.github.io/hoss"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Interfacing-with-the-Keyboard" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/" class="article-date">
+  <time datetime="2019-02-27T19:24:36.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Interfacing with the Keyboard
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing with HOSS.</p>
+<p>I started with the basic driver that Fenollosa presented (this being on area where Brundell had a reference in his table of contents but no text).  Really, this was just test code.  It setup a keyboard interrupt handler, converted the scancode into an ASCII character (for the printable ones), put each character in a buffer, and echoed this out to the screen.  If you pressed Enter/Return, it echoed the buffer and then cleared it.  If you typed “END”, it would halt the processor.  It did handle the Shift key, so a 1 was always a 1 even when you held the Shift key; letters were always capital.  But all this code, including displaying the output and processing special characters like Return or Backspace, were handled in the driver.  Obviously this was just test code and not the final state of his keyboard driver, but it was the last bit of such code Fenollosa had in his tutorial, so this is what I had to start with.</p>
+<p>The first thing I added was processing of the Shift key.  The keyboard interface itself doesn’t help you here.  Whenever a key is pressed or released, the keyboard interrupt service routine is called with the scancode of the key (which is different than the ASCII value), but otherwise that’s basically all you get.  So, for example, if someone pressed A, you don’t one value if they’re holding the Shift and another value if they’re not.  You just get the scancode (30 for the A, btw).  When they press the Shift, you get a separate call to the interrupt routine for the Shift key scancode.  So I added a static member to the keyboard driver called <code>shiftPressed</code>, and when the ISR was called with the Shift being pressed, I set this to ON (1).  When it was called with the Shift being raised (indicated by the same scancode + 128), I set this to OFF (0).  Then when the user typed an A, I translated this to <code>A</code> if the shiftPressed was ON and <code>a</code> if the shiftPressed was off.  Technically I did this by having two arrays of characters, with the scancode being the index to the array.  The first was when shiftPressed was OFF; the second when shiftPressed was ON.  This let me easily handle all the printable keys: The letters, numbers, and special characters like <code>$</code> and <code>/</code>.  Though I haven’t actually done so yet, that will be my same approach for the Ctrl and Alt keys.</p>
+<p>At this point, I thought about supporting the Caps Lock key, but there’s a further complication with that.  The keyboard ISR is called when the Caps Lock is pressed and released, but that again has no impact on anything.  Of course, setting up another static variable to track the Caps Lock key is no big deal, but here’s the rub.  The Caps Lock has an LED indicator so the user can determine if it’s on or not.  One can control that using the data port interface of the keyboard, but I just haven’t figured out how to do that yet.  So for the moment the Caps Lock remains unused.</p>
+<p>So after I did the above, it was just a matter of moving all the non-keyboard code out of the driver, and providing a routine for apps to call.  I created one called <code>waitForAscii</code>, which just waits until a printable key is pressed and returns the ASCII value.  It ignores anything like Ctrl or the function keys.  It also doesn’t work with the number pad yet, even though those are printable.  Even though it won’t return a Shift, it does modify the ASCII appropriately based on the status of the Shift key.</p>
+<p>My future plan is to provide a mechanism for polling the keyboard that won’t block, and to give equivalent methods that include extended keys as well.  I also want to add support for the number pad even to the standard ASCII routines.  But these enhancements are for a little ways down the road.  My one blocking method supporting only ASCII keys will serve me for the moment as I begin my next task, building the basics of a command shell.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://hculpan.github.io/hoss/2019/02/27/Interfacing-with-the-Keyboard/" data-id="cjsq7dfwf0002ylqb8l4x9l9j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/hoss/2019/02/28/A-Command-Shell/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          A Command Shell
+        
+      </div>
+    </a>
+  
+  
+    <a href="/hoss/2019/02/24/The-Screen-Device/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">The Screen Device</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/hoss/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/hoss/2019/02/28/A-Command-Shell/">A Command Shell</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/">Interfacing with the Keyboard</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/24/The-Screen-Device/">The Screen Device</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/23/Structure-of-HOSS/">Structure of HOSS</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/21/First-Post/">Introduction to HOSS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Harry Culpan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/hoss/" class="mobile-nav-link">Home</a>
+  
+    <a href="/hoss/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/hoss/fancybox/jquery.fancybox.css">
+  <script src="/hoss/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/hoss/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
