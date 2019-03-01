@@ -2,6 +2,15 @@
 #include "../cpu/ports.h"
 #include "../libc/mem.h"
 
+#define VIDEO_ADDRESS   0xb8000
+#define MAX_ROWS        25
+#define MAX_COLS        80
+
+#define DEFAULT_ATTR    0x07
+
+#define REG_SCREEN_CTRL 0x3d4
+#define REG_SCREEN_DATA 0x3d5
+
 int get_screen_offset(int col, int row) { return ((row * MAX_COLS) + col) * 2; }
 int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
 int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }

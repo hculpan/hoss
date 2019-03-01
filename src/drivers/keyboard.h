@@ -7,4 +7,14 @@ void init_keyboard();
 
 char waitForAscii();
 
+unsigned char waitForScancode();
+
+unsigned char isCtrlPressed();
+
+unsigned char isAltPressed();
+
+unsigned char isShiftPressed();
+
+unsigned char isCapsLockOn();
+
 #endif

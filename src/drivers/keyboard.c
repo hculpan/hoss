@@ -1,7 +1,6 @@
 #include "keyboard.h"
 #include "../cpu/ports.h"
 #include "../cpu/isr.h"
-#include "screen.h"
 #include "../libc/string.h"
 #include "../libc/function.h"
 #include "../kernel/kernel.h"
@@ -11,8 +10,9 @@
 
 #define LEFT_SHIFT      42
 #define RIGHT_SHIFT     54
-
-static char key_buffer[256];
+#define CTRL            29
+#define ALT             56
+#define CAPS_LOCK       186
 
 #define ON  1;
 #define OFF 0;
@@ -22,6 +22,8 @@ static char shiftPressed = OFF;
 static char ctrlPressed = OFF;
 
 static char altPressed = OFF;
+
+static char capsLock = OFF;
 
 static unsigned char last_scancode = 0;
 
@@ -59,10 +61,21 @@ static char scancodeToChar() {
             return '\b';
         } else if (scancode == ENTER) {
             return '\r';
-        } else if (shiftPressed) {
-            return sc_ascii_shifted[(int)scancode];
-        } else {
+        } else if (!shiftPressed && !capsLock) {
             return sc_ascii[(int)scancode];
+        } else if (!capsLock) {
+            return sc_ascii_shifted[(int)scancode];
+        } else {  // capsLock == ON
+            char letter = sc_ascii_shifted[(int)scancode];
+            if (!shiftPressed && letter >= 'A' && letter <= 'Z') {
+                return letter;
+            } else if (shiftPressed && letter >= 'A' && letter <= 'Z') {
+                return sc_ascii[(int)scancode];
+            } else if (shiftPressed) {
+                return sc_ascii_shifted[(int)scancode];
+            } else {
+                return sc_ascii[(int)scancode];
+            }
         }
     }
     return (result == '\a' ? '\0' : result);
@@ -72,6 +85,17 @@ char waitForAscii() {
     char result = 0;
     while (!result) {
         result = last_ascii;
+        last_ascii = 0;
+        last_scancode = 0;
+    }
+    return result;
+}
+
+unsigned char waitForScancode() {
+    unsigned char result = 0;
+    while (!result) {
+        result = last_scancode;
+        last_scancode = 0;
         last_ascii = 0;
     }
     return result;
@@ -85,6 +109,16 @@ static void keyboard_callback(registers_t regs) {
         shiftPressed = ON;
     } else if (last_scancode == LEFT_SHIFT + 128 || last_scancode == RIGHT_SHIFT + 128) {
         shiftPressed = OFF;
+    } else if (last_scancode == CTRL) {
+        ctrlPressed = ON;
+    } else if (last_scancode == CTRL + 128) {
+        ctrlPressed = OFF;
+    } else if (last_scancode == ALT) {
+        altPressed = ON;
+    } else if (last_scancode == ALT + 128) {
+        altPressed = OFF;
+    } else if (last_scancode == CAPS_LOCK) {
+        capsLock = !capsLock;
     } else if (last_scancode < 128) {
         char letter = scancodeToChar();
         if (letter != '\a') {
@@ -92,6 +126,18 @@ static void keyboard_callback(registers_t regs) {
         }
     }
     UNUSED(regs);
+}
+
+unsigned char isCtrlPressed() {
+    return ctrlPressed;
+}
+
+unsigned char isAltPressed() {
+    return altPressed;
+}
+
+unsigned char isShiftPressed() {
+    return shiftPressed;
 }
 
 void init_keyboard() {

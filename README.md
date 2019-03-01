@@ -23,6 +23,7 @@ gh-pages branch.
 
 ### To write a new post
 ```
+cd blog
 hexo new "<title>"
 ```
 This new post should be committed to the Master branch, not the gh-pages branch.  The deploy step 

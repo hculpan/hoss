@@ -2,10 +2,20 @@
 KERNEL_OFFSET equ 0x1000
 
 [bits 16]
+    jmp boot_start
+
+MEMORY_SIZE     dd 0x00000000
+BOOT_DRIVE      db  0
+
+boot_start:
     mov [BOOT_DRIVE], dl
 
     mov bp, 0x9000
     mov sp, bp
+
+    mov ax, 0xe801
+    int 0x15
+    mov [MEMORY_SIZE], bx
 
     mov bx, MSG_REAL_MODE
     call print_string_16
@@ -43,7 +53,6 @@ BEGIN_PM:
 
 
 ; Global variables
-BOOT_DRIVE      db  0
 MSG_REAL_MODE   db  "Started in 16-bit Real Mode", 0
 MSG_LOAD_KERNEL db  "Loading kernel into memory", 0
 
