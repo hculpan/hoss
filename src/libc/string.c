@@ -17,24 +17,78 @@ void int_to_ascii(int n, char str[]) {
     reverse(str);
 }
 
-void hex_to_ascii(int n, char str[]) {
-    append(str, '0');
-    append(str, 'x');
+/**
+ * Based on K&R implementation of int_to_ascii
+ */
+void long_to_ascii(long n, char str[]) {
+    int i, sign;
+    if ((sign = n) < 0) n = -n;
+    i = 0;
+    do {
+        str[i++] = n % 10 + '0';
+    } while ((n /= 10) > 0);
+
+    if (sign < 0) str[i++] = '-';
+    str[i] = '\0';
+
+    reverse(str);
+}
+
+void pretty_number(char* input) {
+    int iInputLen = strlen(input);
+    // char output[iInputLen + (iInputLen / 3) + 1];
+    char output[25];
+    int iOutputBufferPos = 0;
+    for (int i = 0; i < iInputLen; i++) {
+        if ((iInputLen-i) % 3 == 0 && i != 0) {
+            output[iOutputBufferPos++] = ',';
+        }
+
+        output[iOutputBufferPos++] = input[i];
+    }
+
+    output[iOutputBufferPos] = '\0';
+    strcpy(input, output); 
+}
+
+void long_as_hex(long n, char str[]) {
+    str[0] = '\0';
     char zeros = 0;
 
-    s32 tmp;
+    int tmp;
     int i;
     for (i = 28; i > 0; i -= 4) {
         tmp = (n >> i) & 0xF;
         if (tmp == 0 && zeros == 0) continue;
         zeros = 1;
-        if (tmp > 0xA) append(str, tmp - 0xA + 'a');
+        if (tmp > 0xA) append(str, tmp - 0xA + 'A');
         else append(str, tmp + '0');
     }
 
     tmp = n & 0xF;
-    if (tmp >= 0xA) append(str, tmp - 0xA + 'a');
+    if (tmp >= 0xA) append(str, tmp - 0xA + 'A');
     else append(str, tmp + '0');
+}
+
+void hex_to_ascii(long n, char str[]) {
+    char buff[17];
+    long_as_hex(n, buff);
+    str[0] = '\0';
+    strcat(str, "0x");
+    strcat(str, buff);
+}
+
+void hex_to_ascii_padded(long n, char str[], int bytes_length) {
+    char buff[bytes_length < 18 ? 18 : bytes_length];
+    long_as_hex(n, buff);
+    str[0] = '\0';
+    strcat(str, "0x");
+    int l = strlen(buff);
+    while (bytes_length > l) {
+        append(str, '0');
+        l++;
+    }
+    strcat(str, buff);
 }
 
 /* K&R */
@@ -48,7 +102,7 @@ void reverse(char s[]) {
 }
 
 /* K&R */
-int strlen(char s[]) {
+int strlen(const char s[]) {
     int i = 0;
     while (s[i] != '\0') ++i;
     return i;
@@ -87,3 +141,29 @@ char *strcat(char *dest, const char *src) {
     return dest;
 }
 
+char * strcpy ( char * destination, const char * source ) {
+    int l = strlen(source);
+    for (int i = 0; i < l; i++) {
+        destination[i] = source[i];
+    }
+    destination[l] = '\0';
+    return destination;
+}
+
+void trim_trailing(char *s) {
+    int l = strlen(s) - 1;
+    for (; l >= 0; l--) {
+        if (!isspace(s[l])) {
+            s[l + 1] = '\0';
+            break;
+        }
+    }
+
+    if (l == -1) {
+        s[0] = '\0';
+    }
+}
+
+char isspace(char c) {
+    return (c == ' ' ? 1 : 0);
+}

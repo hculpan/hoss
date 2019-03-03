@@ -11,7 +11,7 @@ LD = /usr/local/i386elfgcc/bin/i386-elf-ld
 all: os-image
 
 run: all
-	qemu-system-i386 -drive file=os-image,index=0,if=floppy,media=disk,format=raw -m 1g
+	qemu-system-i386 -drive file=os-image,index=0,if=floppy,media=disk,format=raw -m 2g
 
 os-image: src/boot/boot_sect.bin src/kernel/kernel.bin
 	cat $^ > os-image

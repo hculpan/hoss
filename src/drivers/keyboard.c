@@ -140,6 +140,10 @@ unsigned char isShiftPressed() {
     return shiftPressed;
 }
 
+unsigned char isCapsLockOn() {
+    return capsLock;
+}
+
 void init_keyboard() {
    register_interrupt_handler(IRQ1, keyboard_callback); 
 }

@@ -4,7 +4,6 @@ KERNEL_OFFSET equ 0x1000
 [bits 16]
     jmp boot_start
 
-MEMORY_SIZE     dd 0x00000000
 BOOT_DRIVE      db  0
 
 boot_start:
@@ -13,9 +12,7 @@ boot_start:
     mov bp, 0x9000
     mov sp, bp
 
-    mov ax, 0xe801
-    int 0x15
-    mov [MEMORY_SIZE], bx
+    call do_e820
 
     mov bx, MSG_REAL_MODE
     call print_string_16
@@ -28,6 +25,7 @@ boot_start:
 
 %include "print_string_16.asm"
 %include "disk_load.asm"
+%include "mem_check.asm"
 %include "gdt.asm"
 %include "print_string.asm"
 %include "switch_to_pm.asm"
@@ -38,8 +36,9 @@ load_kernel:
     mov bx, MSG_LOAD_KERNEL
     call print_string_16
 
+
     mov bx, KERNEL_OFFSET
-    mov dh, 15
+    mov dh, 50
     mov dl, [BOOT_DRIVE]
     call disk_load
     ret
