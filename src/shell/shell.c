@@ -97,13 +97,13 @@ void displayMemorySegments() {
     kprint("Memory Segments:\n") ; 
     char buff[50];
     kprint("           start                length          type\n");
-    while (curr) {
+    while (1) {
         kprint("   ");
-        hex_to_ascii_padded(curr->starting_address, buff, 16);
+        hex_to_ascii_padded((unsigned long)curr, buff, 16);
         kprint("[ ");
         kprint(buff);
         kprint(" : ");
-        hex_to_ascii_padded((curr->pages * PAGE_SIZE), buff, 16);
+        hex_to_ascii_padded(curr->length, buff, 16);
         kprint(buff);
         kprint("] : ");
         switch (curr->type) {
@@ -116,22 +116,29 @@ void displayMemorySegments() {
             case TYPE_USER:
                 kprint("user");
                 break;
+            case TYPE_EOM:
+                kprint("End-of-Memory marker");
+                break;
             default:
                 kprint("unknown");
                 break;
         }
         kprint("\n");
 
-        curr = curr->next;
+        if (curr->type == TYPE_EOM) {
+            break;
+        }
+
+        curr = (struct Memory_Segment *)((char *)curr + curr->length + sizeof(struct Memory_Segment));
     }
     kprint("\n\n");
 }
 
 void displayMemory() {
     displayMemoryValue(get_total_memory(), "Total Memory: ");
-    displayMemoryValue(get_os_memory(), "  System :");
-    displayMemoryValue(get_user_memory(), "  User   :");
-    displayMemoryValue(get_free_memory(), "  Free   :");
+    displayMemoryValue(get_os_memory(), "  System : ");
+    displayMemoryValue(get_user_memory(), "  User   : ");
+    displayMemoryValue(get_free_memory(), "  Free   : ");
 }
 
 void displayMemoryMap(int dtype) {
