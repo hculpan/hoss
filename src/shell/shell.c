@@ -5,13 +5,17 @@
 #include "../libc/string.h"
 #include "../kernel/memory.h"
 
+#include "../kernel/mem_manager.h"
+
 static char displayScancode = 0;
 
 void process_command(char *buff);
 void displayUsableMemory();
 void displayFullMemory();
 void displayMemoryMap(int dtype);
+void displayMemorySegments();
 void displayMemory();
+void allocateRam();
 
 void start_shell() {
     kprint("Type something!\n"); 
@@ -59,6 +63,10 @@ void process_command(char *buff) {
         displayFullMemory();
     } else if (strcmp(buff, "mem") == 0) {
         displayMemory();
+    } else if (strcmp(buff, "mem segments") == 0) {
+        displayMemorySegments();
+    } else if (strcmp(buff, "alloc") == 0) {
+        allocateRam();
     } else {
         kprint("-> ");
         kprint(buff);
@@ -67,15 +75,63 @@ void process_command(char *buff) {
     buff[0] = '\0';
 }
 
-void displayMemory() {
-    struct Memory_Block memory_block;
+void allocateRam() {
+    allocate(10);
+    displayMemory();
+    displayMemorySegments();
+}
+
+void displayMemoryValue(unsigned int value, char *descr) {
     char buff[50];
-    totalAvailableMemory(&memory_block);
-    long_to_ascii(memory_block.length, buff);
+    long_to_ascii(value, buff);
     pretty_number(buff);
-    kprint("Memory available: ");
+    kprint(descr);
     kprint(buff);
     kprint("\n");
+}
+
+void displayMemorySegments() {
+    displayMemoryValue(get_total_memory(), "Total Memory: ");
+    struct Memory_Segment *curr = get_segments();
+
+    kprint("Memory Segments:\n") ; 
+    char buff[50];
+    kprint("           start                length          type\n");
+    while (curr) {
+        kprint("   ");
+        hex_to_ascii_padded(curr->starting_address, buff, 16);
+        kprint("[ ");
+        kprint(buff);
+        kprint(" : ");
+        hex_to_ascii_padded((curr->pages * PAGE_SIZE), buff, 16);
+        kprint(buff);
+        kprint("] : ");
+        switch (curr->type) {
+            case TYPE_FREE:
+                kprint("free");
+                break;
+            case TYPE_OS:
+                kprint("system");
+                break;
+            case TYPE_USER:
+                kprint("user");
+                break;
+            default:
+                kprint("unknown");
+                break;
+        }
+        kprint("\n");
+
+        curr = curr->next;
+    }
+    kprint("\n\n");
+}
+
+void displayMemory() {
+    displayMemoryValue(get_total_memory(), "Total Memory: ");
+    displayMemoryValue(get_os_memory(), "  System :");
+    displayMemoryValue(get_user_memory(), "  User   :");
+    displayMemoryValue(get_free_memory(), "  Free   :");
 }
 
 void displayMemoryMap(int dtype) {

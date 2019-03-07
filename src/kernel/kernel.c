@@ -1,12 +1,9 @@
 #include "kernel.h"
-#include "memory.h"
+#include "mem_manager.h"
 
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"
-#include "../libc/string.h"
-#include "../libc/mem.h"
 #include "../shell/shell.h"
-#include "../drivers/screen.h"
 
 long availableMemory();
 
@@ -16,6 +13,8 @@ void kernel_main() {
 
     isr_install();
     irq_install();
+
+    init_memory_manager();
 
     start_shell();
 }
