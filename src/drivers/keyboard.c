@@ -84,9 +84,11 @@ static char scancodeToChar() {
 char waitForAscii() {
     char result = 0;
     while (!result) {
+        asm volatile("cli");
         result = last_ascii;
         last_ascii = 0;
         last_scancode = 0;
+        asm volatile("sti");
     }
     return result;
 }
@@ -94,9 +96,11 @@ char waitForAscii() {
 unsigned char waitForScancode() {
     unsigned char result = 0;
     while (!result) {
+        asm volatile("cli");
         result = last_scancode;
         last_scancode = 0;
         last_ascii = 0;
+        asm volatile("sti");
     }
     return result;
 }

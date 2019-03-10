@@ -9,6 +9,8 @@
 
 static char displayScancode = 0;
 
+static void *last_ptr = 0;
+
 void process_command(char *buff);
 void displayUsableMemory();
 void displayFullMemory();
@@ -67,6 +69,8 @@ void process_command(char *buff) {
         displayMemorySegments();
     } else if (strcmp(buff, "alloc") == 0) {
         allocateRam();
+    } else if (strcmp(buff, "free") == 0) {
+        freeRam();
     } else {
         kprint("-> ");
         kprint(buff);
@@ -75,8 +79,27 @@ void process_command(char *buff) {
     buff[0] = '\0';
 }
 
+void freeRam() {
+    if (!last_ptr) return;
+
+    free(last_ptr);
+    last_ptr = 0;
+
+    displayMemory();
+    displayMemorySegments();
+}
+
 void allocateRam() {
-    allocate(10);
+    last_ptr = allocate(4096);
+    if (!last_ptr) {
+        kprint("Uh-oh!\n");
+    } else {
+        kprint("Got it!  Starting address: ");
+        char buff[20];
+        hex_to_ascii_padded(last_ptr, buff, 16);
+        kprint(buff);
+        kprint("\n");
+    };
     displayMemory();
     displayMemorySegments();
 }
@@ -91,7 +114,6 @@ void displayMemoryValue(unsigned int value, char *descr) {
 }
 
 void displayMemorySegments() {
-    displayMemoryValue(get_total_memory(), "Total Memory: ");
     struct Memory_Segment *curr = get_segments();
 
     kprint("Memory Segments:\n") ; 
@@ -129,7 +151,7 @@ void displayMemorySegments() {
             break;
         }
 
-        curr = (struct Memory_Segment *)((char *)curr + curr->length + sizeof(struct Memory_Segment));
+        curr = (struct Memory_Segment *)((void *)curr + curr->length + sizeof(struct Memory_Segment));
     }
     kprint("\n\n");
 }
