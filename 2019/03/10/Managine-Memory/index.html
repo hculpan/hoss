@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Managine Memory and Bochs | HOSS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Managine Memory and Bochs">
+<meta property="og:url" content="http://hculpan.github.io/hoss/2019/03/10/Managine-Memory/index.html">
+<meta property="og:site_name" content="HOSS">
+<meta property="og:description" content="Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-10T18:20:44.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Managine Memory and Bochs">
+<meta name="twitter:description" content="Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.">
+  
+    <link rel="alternate" href="/hoss/atom.xml" title="HOSS" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/hoss/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/hoss/" id="logo">HOSS</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/hoss/" id="subtitle">Harry&#39;s Operating System Software</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/hoss/">Home</a>
+        
+          <a class="main-nav-link" href="/hoss/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/hoss/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://hculpan.github.io/hoss"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Managine-Memory" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hoss/2019/03/10/Managine-Memory/" class="article-date">
+  <time datetime="2019-03-10T14:34:21.000Z" itemprop="datePublished">2019-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Managine Memory and Bochs
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.</p>
+<p>My first effort didn’t work out that well and, in retrospect, was pretty stupid.  If you recall from my prior post, I had gotten the system memory map.  This gave me a view on what memory was available and what wasn’t.  The way it appeared, all memory above 1mb was available in one continguous chunk, while below 1mb it was more fragmented.  So I made the easy choice that for heap memory, I would ignore everything below 1mb.</p>
+<p>With that decided, I started in to writing my memory manager.  I created a structure called <code>Memory_Segment</code> that had basic information: The starting address of a segment, length, type (for the moment, just free, system, or user), and pointers to the left and right segment descriptor.  Deciding that I would limit allocation to 4k segments, I created a solid block of memory to store an array of these, with enough memory allocated to manage the entire available memory.  This block started at 1mb, with the actual free ram located above this system block.</p>
+<p>This was a very poor approach though.  I had an array of structures, but because I wanted to do a buddy allocation scheme, I was also treating them as a tree.  Mixing a dynamic tree structure with an array was a bad idea, and predictably it failed.  I could allocate memory pretty easily, but freeing became onerous.</p>
+<p>After a good night’s sleep, I decided to scrap what I had and start over.  I came up with a far more rational - and, I suspect, more standard - approach.  Rather than storing the segment discriptor in a block set aside for that purpose, I decided to store the descriptor with the allocated memory as a header.  So I altered my descriptor structure to a simpler and shorter format, containing just the length, type, and pointer to previous.  My pointer to next could be calculated by simpling added the address of the descriptor with the size of the structure and length of that memory block.  This gave me a linked list of memory blocks, and made writing a first fit allocator pretty straightforward.  The only thing other thing I had to do was add a descriptor with type TYPE_EOM and length of 0 at the end of memory, which gave me a clean marker to end the list.</p>
+<h3 id="Bochs"><a href="#Bochs" class="headerlink" title="Bochs"></a>Bochs</h3><p>So far, I’ve been using QEMU almost exclusively for development, with a little testing in VirtualBox and an attempt in VMWare Fusion.  In the last, I get a CPU fault, which I’ve not bothered to try to track down yet.  With VirtualBox, I get a very different error.  Everything works, but it seems to lose some keyboard strokes.  I can type a letter and sometimes it works and sometimes nothing happens.</p>
+<p>I didn’t think too much about it, as everything worked just great in QEMU.  But for some reason I decided to get Bochs to work.  The issue with Bochs, for those who haven’t used it, is there doesn’t seem to be a simple way to start.  Obviously there’s the documentation, but for someone who’s trying to get something done, this is pretty onerous.  I finally found a video that discussed about editing and saving properties, and then another that discussed basic commands.  So with that, I pretty quickly had Bochs up and running with my os image.</p>
+<p>But the thing was, it had the same keyboard behavior as I saw in VirtualBox.  When I ignored it earlier with VirtualBox, I kind of wrote it off to, “It works in QEMU, but not in VB, but I don’t know which one is more correct behavior.  So worry about it later.”  But with Bochs acting like VB, that kind of suggested that QEMU was probably not accurate.</p>
+<p>I spent a while trying to track it down, and of course went straight to my interrupt handler routine for the keyboard.  At the moment, my keyboard device driver does two very basic things.  It manages the state of the Shift, Ctrl, and Alt keys, and it maps scancodes to ASCII characters.  It has two basic external methods, <code>waitForAscii</code> and <code>waitForScancode</code>.  Both are blocking, and they just loop until a key is pressed.  Obviously this won’t be sufficient in the long term, but it meets my needs for now.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">char waitForAscii() &#123;</span><br><span class="line">    char result = 0;</span><br><span class="line">    while (!result) &#123;</span><br><span class="line">        result = last_ascii;</span><br><span class="line">        last_ascii = 0;</span><br><span class="line">        last_scancode = 0;</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>This is pretty simple.  The only thing that might need some explanation is the <code>last_ascii</code> and the <code>last_scancode</code> variables.  These are just driver-level variables that are set by the interrupt handler to the scancode and the mapped ascii code, if it maps to ascii.  Appropriate use of kprint statements allows me to eliminate the interrupt handler, so I can to this function next.  It took me a bit of thought, but I finally realized what was going on.  The interrupt handler could fire at any point in this function, including in between, say, the setting of <code>result</code> and resetting <code>last_ascii</code>.  This is, of course, very similar to problems with multithreading code, so I really should have seen this right away.  In any case, the answer was reasonably simple.  Just disable and enable interrupts at the appropriate times, as so:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">asm volatile(&quot;cli&quot;);</span><br><span class="line">result = last_ascii;</span><br><span class="line">last_ascii = 0;</span><br><span class="line">last_scancode = 0;</span><br><span class="line">asm volatile(&quot;sti&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>So now keyboard input works consistently in QEMU, VirtualBox, and Bochs.</p>
+<p>But all is still not golden.  There’s still the CPU fault in VMWare Fusion, of course, though for the moment I’m willing to ignore this.  More concerning is that I have a memory allocation problem with VB.  Right now, I have a little test in my shell that allows me to type <code>alloc</code> and it will just allocate 4k on the heap and display the resulting memory segment chain.  On QEMU and Bochs, I can seemingly do this all day long with no problem.  On VB, it locks up and often prints strange things on the screen.  A new problem to look at, but that’s for another post.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://hculpan.github.io/hoss/2019/03/10/Managine-Memory/" data-id="cjt38uhmz0003mmsl361jsa0j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">How Much Memory Do I Have?</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/hoss/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/hoss/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/hoss/2019/03/10/Managine-Memory/">Managine Memory and Bochs</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/">How Much Memory Do I Have?</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/28/A-Command-Shell/">A Command Shell</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/">Interfacing with the Keyboard</a>
+          </li>
+        
+          <li>
+            <a href="/hoss/2019/02/24/The-Screen-Device/">The Screen Device</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Harry Culpan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/hoss/" class="mobile-nav-link">Home</a>
+  
+    <a href="/hoss/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/hoss/fancybox/jquery.fancybox.css">
+  <script src="/hoss/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/hoss/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
