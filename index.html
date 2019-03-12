@@ -1,98 +1,400 @@
 <!DOCTYPE html>
-<html>
-<head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="utf-8">
-  
+
+
+
+
+
+
+
+
+
+
+
 
   
-  <title>HOSS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/hoss/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/hoss/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hoss/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hoss/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hoss/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/hoss/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hoss/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="This is a blog about my efforts to write a 32-bit operating system">
+<meta property="og:type" content="website">
 <meta property="og:title" content="HOSS">
 <meta property="og:url" content="http://hculpan.github.io/hoss/index.html">
 <meta property="og:site_name" content="HOSS">
-<meta property="og:locale" content="default">
+<meta property="og:description" content="This is a blog about my efforts to write a 32-bit operating system">
+<meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HOSS">
-  
-    <link rel="alternate" href="/hoss/atom.xml" title="HOSS" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/hoss/css/style.css">
-</head>
-</html>
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/hoss/" id="logo">HOSS</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/hoss/" id="subtitle">Harry&#39;s Operating System Software</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/hoss/">Home</a>
-        
-          <a class="main-nav-link" href="/hoss/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/hoss/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://hculpan.github.io/hoss"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-Managine-Memory" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/03/10/Managine-Memory/" class="article-date">
-  <time datetime="2019-03-10T14:34:21.000Z" itemprop="datePublished">2019-03-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/03/10/Managine-Memory/">Managing Memory and Bochs</a>
-    </h1>
+<meta name="twitter:description" content="This is a blog about my efforts to write a 32-bit operating system">
+
+
+
+
+
+
+  <link rel="canonical" href="http://hculpan.github.io/hoss/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>HOSS</title>
   
 
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hoss/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">HOSS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Harry's Operating System Software</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/hoss/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/hoss/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/03/10/Managine-Memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/03/10/Managine-Memory/" class="post-title-link" itemprop="url">Managing Memory and Bochs</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-10 10:34:21" itemprop="dateCreated datePublished" datetime="2019-03-10T10:34:21-05:00">2019-03-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-12 10:10:35" itemprop="dateModified" datetime="2019-03-12T10:10:35-05:00">2019-03-12</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.</p>
+      
+
+      
+        
+          
+            <p>Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.</p>
 <p>My first effort didn’t work out that well and, in retrospect, was pretty stupid.  If you recall from my prior post, I had gotten the system memory map.  This gave me a view on what memory was available and what wasn’t.  The way it appeared, all memory above 1mb was available in one continguous chunk, while below 1mb it was more fragmented.  So I made the easy choice that for heap memory, I would ignore everything below 1mb.</p>
 <p>With that decided, I started in to writing my memory manager.  I created a structure called <code>Memory_Segment</code> that had basic information: The starting address of a segment, length, type (for the moment, just free, system, or user), and pointers to the left and right segment descriptor.  Deciding that I would limit allocation to 4k segments, I created a solid block of memory to store an array of these, with enough memory allocated to manage the entire available memory.  This block started at 1mb, with the actual free ram located above this system block.</p>
 <p>This was a very poor approach though.  I had an array of structures, but because I wanted to do a buddy allocation scheme, I was also treating them as a tree.  Mixing a dynamic tree structure with an array was a bad idea, and predictably it failed.  I could allocate memory pretty easily, but freeing became onerous.</p>
-<p>After a good night’s sleep, I decided to scrap what I had and start over.  I came up with a far more rational - and, I suspect, more standard - approach.  Rather than storing the segment discriptor in a block set aside for that purpose, I decided to store the descriptor with the allocated memory as a header.  So I altered my descriptor structure to a simpler and shorter format, containing just the length, type, and pointer to previous.  My pointer to next could be calculated by simpling added the address of the descriptor with the size of the structure and length of that memory block.  This gave me a linked list of memory blocks, and made writing a first fit allocator pretty straightforward.  The only thing other thing I had to do was add a descriptor with type TYPE_EOM and length of 0 at the end of memory, which gave me a clean marker to end the list.</p>
+<p>After a good night’s sleep, I decided to scrap what I had and start over.  I came up with a far more rational - and, I suspect, more standard - approach.  Rather than storing the segment discriptor in a block set aside for that purpose, I decided to store the descriptor with the allocated memory as a header.  So I altered my descriptor structure to a simpler and shorter format, containing just the length, type, and pointer to previous.  My pointer to next could be calculated by simpling added the address of the descriptor with the size of the structure and length of that memory block.  This gave me a linked list of memory blocks, and made writing a first fit allocator pretty straightforward.  The only other thing I had to do was add a descriptor with type TYPE_EOM and length of 0 at the end of memory, which gave me a clean marker to end the list.</p>
 <h3 id="Bochs"><a href="#Bochs" class="headerlink" title="Bochs"></a>Bochs</h3><p>So far, I’ve been using QEMU almost exclusively for development, with a little testing in VirtualBox and an attempt in VMWare Fusion.  In the last, I get a CPU fault, which I’ve not bothered to try to track down yet.  With VirtualBox, I get a very different error.  Everything works, but it seems to lose some keyboard strokes.  I can type a letter and sometimes it works and sometimes nothing happens.</p>
 <p>I didn’t think too much about it, as everything worked just great in QEMU.  But for some reason I decided to get Bochs to work.  The issue with Bochs, for those who haven’t used it, is there doesn’t seem to be a simple way to start.  Obviously there’s the documentation, but for someone who’s trying to get something done, this is pretty onerous.  I finally found a video that discussed about editing and saving properties, and then another that discussed basic commands.  So with that, I pretty quickly had Bochs up and running with my os image.</p>
 <p>But the thing was, it had the same keyboard behavior as I saw in VirtualBox.  When I ignored it earlier with VirtualBox, I kind of wrote it off to, “It works in QEMU, but not in VB, but I don’t know which one is more correct behavior.  So worry about it later.”  But with Bochs acting like VB, that kind of suggested that QEMU was probably not accurate.</p>
@@ -101,42 +403,160 @@
 <p>So now keyboard input works consistently in QEMU, VirtualBox, and Bochs.</p>
 <p>But all is still not golden.  There’s still the CPU fault in VMWare Fusion, of course, though for the moment I’m willing to ignore this.  More concerning is that I have a memory allocation problem with VB.  Right now, I have a little test in my shell that allows me to type <code>alloc</code> and it will just allocate 4k on the heap and display the resulting memory segment chain.  On QEMU and Bochs, I can seemingly do this all day long with no problem.  On VB, it locks up and often prints strange things on the screen.  A new problem to look at, but that’s for another post.</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/03/10/Managine-Memory/" data-id="cjt3lxqsv0005uksla87vgxs6" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+      
 
   
-    <article id="post-How-Much-Memory-Do-I-Have" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/" class="article-date">
-  <time datetime="2019-03-01T15:20:20.000Z" itemprop="datePublished">2019-03-01</time>
-</a>
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/03/01/How-Much-Memory-Do-I-Have/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/">How Much Memory Do I Have?</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/" class="post-title-link" itemprop="url">How Much Memory Do I Have?</a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-01 10:20:20" itemprop="dateCreated datePublished" datetime="2019-03-01T10:20:20-05:00">2019-03-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-03 13:19:35" itemprop="dateModified" datetime="2019-03-03T13:19:35-05:00">2019-03-03</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>Over the last two days, I’ve been contemplating my next steps with the OS, with the two most obvious choices being memory manager or floppy drive interface.  But pretty quickly I settled on the memory manager as the more fundamental component.  As the OS is now, I have full control over memory even in my “user” shell program (I haven’t implemented any sort of protection yet), and with a 32-bit memory model, I clearly have enough space to load a whole floppy into memory many times over.  But I feel like I wouldn’t get too far before I’d want to have some way to allocate and track memory.</p>
+      
+
+      
+        
+          
+            <p>Over the last two days, I’ve been contemplating my next steps with the OS, with the two most obvious choices being memory manager or floppy drive interface.  But pretty quickly I settled on the memory manager as the more fundamental component.  As the OS is now, I have full control over memory even in my “user” shell program (I haven’t implemented any sort of protection yet), and with a 32-bit memory model, I clearly have enough space to load a whole floppy into memory many times over.  But I feel like I wouldn’t get too far before I’d want to have some way to allocate and track memory.</p>
 <p>With that in mind, I’ve been looking at various sources for an approach to memory management, but the best I’ve found is Tannenbaum’s book, “Modern Operating Systemns”.  Based on that, I’ve decided to go with a page allocator using the buddy algorithm.  This is just for physical memory, of course; I have no plans to implement virtual memory, as I can’t imagine this project getting big enough that I’d ever need it.  When I launch QEMU to test HOSS, I’m already allocating 1gb.  This is way less than my computer actually has, of course, so I’ve got plenty of room to grow.  But at the moment, 1gb seems like more memory than I could possibly use.  So just physical ram it is!</p>
 <p>The first step in constructing a memory manager, though, is to figure out how much ram I actually have.  My first attempt at googling brought me to a page discussing BIOS interrupt 15h, function E801h.  The nice thing is, this is quite simple and only took me a minute or two to add to my <code>boot/boot_sect.asm</code> file.  The only wrinkle I found here was that, since it’s a BIOS call, I had to call it from my 16-bit boot loader, but how to get it to my 32-bit kernel?  I solved that just by adding a variable to my boot loader.  Since I wanted to be sure I knew what address it would be at, since I would have to hard code the address in my 32-bit kernel, I put it at the top of the boot loader, not the bottom.  Thus the top of <code>boot/boot_sect.asm</code> became:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[org 0x7c00]</span><br><span class="line">KERNEL_OFFSET equ 0x1000</span><br><span class="line"></span><br><span class="line">[bits 16]</span><br><span class="line">    jmp boot_start</span><br><span class="line"></span><br><span class="line">MEMORY_SIZE     dd 0x00000000</span><br><span class="line">BOOT_DRIVE      db  0</span><br><span class="line"></span><br><span class="line">boot_start:</span><br></pre></td></tr></table></figure></p>
 <p>By doing this, I knew that MEMORY_SIZE would be at 7C02h, because <code>jmp boot_start</code> when assembled would take up only 2 bytes.  This added the tiny overhead of a small jump, but since I will likely use FAT12/16 as my file system, I will need to put a structure at the top of the boot loader in any case.</p>
@@ -150,126 +570,480 @@
 <p>At the end of all this, as I was doing final testing, I came across a bit of a vexing problem.  I had added a block in the kernel to display available memory as it started up.  I outputted this in decimal rather than hex, and I wanted it separated with commas, as it’s easier to read.  This necessitated adding several new functions and code blocks.  None of it a big deal, except suddenly my shell stopped functioning correctly.  It stopped outputting the prompt <code>&gt;</code> and the intro text, but you could still type and it would output what you typed.  I backed out all of my code, of course, and the problem went away.  But after scanning the code and seeing no issue, I put it back but removed the code that called it.  So it would be a part of my OS image, but not actually called.  My problem came back.  I concocted theories of memory being overwritten and that sort of thing, all of which turned out to lead nowhere.  What it turned out to be is that my boot loader would load up 15 sectors off the boot disk, but my os-image had grown to 25 sectors.  So it wasn’t loaded a big chunk of it into memory.  Obviously the fix was simple, just load more sectors into memory.  Since it doesn’t give an error if those sectors don’t exist (i.e., if the os-image file is only 10k in size, ~20 sectors, but you say load 30, it will just load what it can find and give no error), I set it to load 50 sectors.  Honestly, I probably should have gone higher, but c’est la vie.  </p>
 <p>If my kernel grows much larger, I’ll probably start looking into doing a multi-stage loader (i.e., load boot sector first, which loads pre-kernel, which then loads final runtime kernel).  By the time I get to this point, though, I presumably will have a file system that I can read for my final kernel.</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/03/01/How-Much-Memory-Do-I-Have/" data-id="cjt3lxqsr0001ukslr9rqoui9" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+      
 
   
-    <article id="post-A-Command-Shell" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/02/28/A-Command-Shell/" class="article-date">
-  <time datetime="2019-02-28T21:16:19.000Z" itemprop="datePublished">2019-02-28</time>
-</a>
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/02/28/A-Command-Shell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/02/28/A-Command-Shell/">A Command Shell</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/02/28/A-Command-Shell/" class="post-title-link" itemprop="url">A Command Shell</a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-02-28 16:16:19" itemprop="dateCreated datePublished" datetime="2019-02-28T16:16:19-05:00">2019-02-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 10:16:24" itemprop="dateModified" datetime="2019-03-01T10:16:24-05:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple command <code>END</code>.  I refactored that code to move it out of the keyboard driver, paring it down just to what was needed to support the keyboard.  While at this point I obviously don’t have applications or a way for them to call an OS-level API, I still wanted to encapsulate the keyboard so that it would be simple for calling processes to access.</p>
+      
+
+      
+        
+          
+            <p>As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple command <code>END</code>.  I refactored that code to move it out of the keyboard driver, paring it down just to what was needed to support the keyboard.  While at this point I obviously don’t have applications or a way for them to call an OS-level API, I still wanted to encapsulate the keyboard so that it would be simple for calling processes to access.</p>
 <p>The result of this is that I refactored all the extraneous code out of the keyboard driver, and originally gave it a new home in the <code>kernel_main</code> function.  But obviously this really isn’t part of the kernel.</p>
 <p>I created a new directory, <code>shell</code>, with a new main file, <code>shell.c</code>.  Thus I started the beginning of my OS’s main command shell.  </p>
 <p>Right now, it’s not much.  It still has the same little typewriter-like functionality that the original keyboard driver had.  But I’ve added a command, <code>scancode</code>, that will put the shell into a mode where it will output the scancode of whatever character is pressed or released.</p>
 <p>While doing this, I also went ahead and addressed some of the shortcomings of my keyboard driver.  I added a <code>waitForScancode</code> function, so a user program can get any key.  I also added flags for the Ctrl, Alt, and CapsLock keys.  The Caps Lock key turned out to be a bit more difficult than I had anticipated.  Unlike the other keys, the Caps Lock really only effects a subset of keys, <code>a</code> through <code>z</code>.  But the numeric keys, for example, aren’t effected.  Even further, if you have Caps Lock enabled but then hold Shift, that reverts a letter to lowercase.  None of this is inherent to the keyboard, of course, and I could have chosen to do it differently in my OS, but I’m a strong believer in standard keyboards.  One of my biggest annoyances when playing with old computers like the Apple II and Commodore 64 is their non-standard keyboards.  So to fully support all this functionality turned out to be a bit trickier than I thought.  My scancode-to-ASCII conversion logic probably doubled in size.  But it wasn’t that big to begin with, so it’s not a big deal.  Just took a number of code-compile-test cycles to finally get it all right.</p>
 <p>The only things left on the keyboard driver are to turn off the Caps Lock indicator on startup (right now, the driver assumes Caps Lock is off), and add application functions for polling.</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/28/A-Command-Shell/" data-id="cjt3lxqsn0000ukslmopp2s0d" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+      
 
   
-    <article id="post-Interfacing-with-the-Keyboard" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/" class="article-date">
-  <time datetime="2019-02-27T19:24:36.000Z" itemprop="datePublished">2019-02-27</time>
-</a>
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/02/27/Interfacing-with-the-Keyboard/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/">Interfacing with the Keyboard</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/" class="post-title-link" itemprop="url">Interfacing with the Keyboard</a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-02-27 14:24:36" itemprop="dateCreated datePublished" datetime="2019-02-27T14:24:36-05:00">2019-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 10:16:17" itemprop="dateModified" datetime="2019-03-01T10:16:17-05:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing with HOSS.</p>
+      
+
+      
+        
+          
+            <p>So the keyboard device driver has been the most fun thing I’ve worked on so far, mostly just because it’s been where I’ve been able to break away from other people’s code and start doing my own thing with HOSS.</p>
 <p>I started with the basic driver that Fenollosa presented (this being on area where Brundell had a reference in his table of contents but no text).  Really, this was just test code.  It setup a keyboard interrupt handler, converted the scancode into an ASCII character (for the printable ones), put each character in a buffer, and echoed this out to the screen.  If you pressed Enter/Return, it echoed the buffer and then cleared it.  If you typed “END”, it would halt the processor.  It did handle the Shift key, so a 1 was always a 1 even when you held the Shift key; letters were always capital.  But all this code, including displaying the output and processing special characters like Return or Backspace, were handled in the driver.  Obviously this was just test code and not the final state of his keyboard driver, but it was the last bit of such code Fenollosa had in his tutorial, so this is what I had to start with.</p>
 <p>The first thing I added was processing of the Shift key.  The keyboard interface itself doesn’t help you here.  Whenever a key is pressed or released, the keyboard interrupt service routine is called with the scancode of the key (which is different than the ASCII value), but otherwise that’s basically all you get.  So, for example, if someone pressed A, you don’t one value if they’re holding the Shift and another value if they’re not.  You just get the scancode (30 for the A, btw).  When they press the Shift, you get a separate call to the interrupt routine for the Shift key scancode.  So I added a static member to the keyboard driver called <code>shiftPressed</code>, and when the ISR was called with the Shift being pressed, I set this to ON (1).  When it was called with the Shift being raised (indicated by the same scancode + 128), I set this to OFF (0).  Then when the user typed an A, I translated this to <code>A</code> if the shiftPressed was ON and <code>a</code> if the shiftPressed was off.  Technically I did this by having two arrays of characters, with the scancode being the index to the array.  The first was when shiftPressed was OFF; the second when shiftPressed was ON.  This let me easily handle all the printable keys: The letters, numbers, and special characters like <code>$</code> and <code>/</code>.  Though I haven’t actually done so yet, that will be my same approach for the Ctrl and Alt keys.</p>
 <p>At this point, I thought about supporting the Caps Lock key, but there’s a further complication with that.  The keyboard ISR is called when the Caps Lock is pressed and released, but that again has no impact on anything.  Of course, setting up another static variable to track the Caps Lock key is no big deal, but here’s the rub.  The Caps Lock has an LED indicator so the user can determine if it’s on or not.  One can control that using the data port interface of the keyboard, but I just haven’t figured out how to do that yet.  So for the moment the Caps Lock remains unused.</p>
 <p>So after I did the above, it was just a matter of moving all the non-keyboard code out of the driver, and providing a routine for apps to call.  I created one called <code>waitForAscii</code>, which just waits until a printable key is pressed and returns the ASCII value.  It ignores anything like Ctrl or the function keys.  It also doesn’t work with the number pad yet, even though those are printable.  Even though it won’t return a Shift, it does modify the ASCII appropriately based on the status of the Shift key.</p>
 <p>My future plan is to provide a mechanism for polling the keyboard that won’t block, and to give equivalent methods that include extended keys as well.  I also want to add support for the number pad even to the standard ASCII routines.  But these enhancements are for a little ways down the road.  My one blocking method supporting only ASCII keys will serve me for the moment as I begin my next task, building the basics of a command shell.</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/27/Interfacing-with-the-Keyboard/" data-id="cjt3lxqst0003uksl4oyr66yg" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+      
 
   
-    <article id="post-The-Screen-Device" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/02/24/The-Screen-Device/" class="article-date">
-  <time datetime="2019-02-24T18:38:53.000Z" itemprop="datePublished">2019-02-24</time>
-</a>
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/02/24/The-Screen-Device/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/02/24/The-Screen-Device/">The Screen Device</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/02/24/The-Screen-Device/" class="post-title-link" itemprop="url">The Screen Device</a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-02-24 13:38:53" itemprop="dateCreated datePublished" datetime="2019-02-24T13:38:53-05:00">2019-02-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 10:16:03" itemprop="dateModified" datetime="2019-03-01T10:16:03-05:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p><img src="images/screen_output_1.png" alt><br>The screen device driver was the first external device I had to interface with, and much of the code that I used came from either Blundell or Fenelossa, although I certainly added my own changes and refinements.</p>
+      
+
+      
+        
+          
+            <p><img src="images/screen_output_1.png" alt><br>The screen device driver was the first external device I had to interface with, and much of the code that I used came from either Blundell or Fenelossa, although I certainly added my own changes and refinements.</p>
 <p>The screen device driver was instructive because, while it is simple, it is the first time that you really notice that you’re in 32-bit Protected Mode.  The reason for this is because you lose access to BIOS.  In 16-bit mode, printing out some text on the display is as simple as populating a few registers and calling the appropriate interrupt.  </p>
 <p>Here, for example, is my print_string_16.asm code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">print_string_16:			; Routine: output string in SI to screen</span><br><span class="line">	mov ah, 0Eh		        ; int 10h &apos;print char&apos; function</span><br><span class="line"></span><br><span class="line">.repeat:</span><br><span class="line">	mov al, [bx]</span><br><span class="line">	cmp al, 0</span><br><span class="line">	je .done		        ; If char is zero, end of string</span><br><span class="line">	int 10h			        ; Otherwise, print it</span><br><span class="line">    add bx, 1</span><br><span class="line">	jmp .repeat</span><br><span class="line"></span><br><span class="line">.done:</span><br><span class="line">	ret</span><br></pre></td></tr></table></figure></p>
 <p>If you’re not used to Assembly code, this may be a little difficult to read, but essentially you call the routine by placing the memory address of the string you want to print into the BX register.  The routine then goes character by character, printing each one until it finds a \0 (the standard terminator for a C-style string).  At that point, it returns.  The hard work is done by the BIOS when it calls <code>int 10h</code>, which tells it to display the character in register AL to the screen.</p>
@@ -280,42 +1054,160 @@
 <p>One weakness of writing to video memory, however, is scrolling.  When text hits the bottom of the screen, we expect that the text just scrolls upward.  Using DMA, there’s no easy way to do this.  I wrote a function, handle_scrolling, that simply moves everything in video memory as if it were one line higher, then outputs the new bottom line.</p>
 <p>The only other issue was the backspace.  Fenollosa had a routine, <code>kprint_backspace()</code>, that I largely used as is, but it didn’t seem to quite work for me.  When I tested it, hitting the backspace created an inverse dot character; it didn’t actually backspace.  I fixed that so it blanked out whatever character was then and moved the cursor back one full space.</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/24/The-Screen-Device/" data-id="cjt3lxqsw0006uksl4886zpcv" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+      
 
   
-    <article id="post-Structure-of-HOSS" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/02/23/Structure-of-HOSS/" class="article-date">
-  <time datetime="2019-02-23T17:04:02.000Z" itemprop="datePublished">2019-02-23</time>
-</a>
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/02/23/Structure-of-HOSS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/02/23/Structure-of-HOSS/">Structure of HOSS</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/02/23/Structure-of-HOSS/" class="post-title-link" itemprop="url">Structure of HOSS</a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-02-23 12:04:02" itemprop="dateCreated datePublished" datetime="2019-02-23T12:04:02-05:00">2019-02-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 10:15:33" itemprop="dateModified" datetime="2019-03-01T10:15:33-05:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p><img src="images/dir_structure_1.png" alt><br>As I mentioned in my first post, HOSS is so far very heavily based on two different tutorials.  As a result, my structure largely matches that given in both of these, particularly Fenollosa’s.  </p>
+      
+
+      
+        
+          
+            <p><img src="images/dir_structure_1.png" alt><br>As I mentioned in my first post, HOSS is so far very heavily based on two different tutorials.  As a result, my structure largely matches that given in both of these, particularly Fenollosa’s.  </p>
 <p>My boot loader can be found in the /boot subdirectory.  I largely followed Blundell’s tutorial here, with the main code being in boot_sect.asm.  As the extensions suggests, it is written in assembly and is assembled using NASM.  The other files here are just included in the main file, so they will not produce their own object files and thus don’t have to be linked.  One change I made from Blundell’s code is that I named the 16-bit print string procedure print_string_16, and the 32-bit version is just print_string.  At the time I was doing it, I thought I would be using the 32-bit version more, but of course once I boot, I start using the version developed in C (see screen.c in /drivers).</p>
 <p>The boot process works as follows:</p>
 <ol>
@@ -332,42 +1224,160 @@
 <li>A simple test loop that takes keyboard input and echoes it out to the screen.  This will be the beginning of my command shell, but for now it’s in kernel.c.  This routine allows me to test out the screen and keyboard device drivers, which is what I’ll discuss next.</li>
 </ol>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/23/Structure-of-HOSS/" data-id="cjt3lxqsu0004ukslmgqdscz4" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+      
 
   
-    <article id="post-First-Post" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hoss/2019/02/21/First-Post/" class="article-date">
-  <time datetime="2019-02-21T15:50:01.000Z" itemprop="datePublished">2019-02-21</time>
-</a>
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/02/21/First-Post/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Harry Culpan">
+      <meta itemprop="description" content="This is a blog about my efforts to write a 32-bit operating system">
+      <meta itemprop="image" content="/hoss/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HOSS">
+    </span>
+
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hoss/2019/02/21/First-Post/">Introduction to HOSS</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/hoss/2019/02/21/First-Post/" class="post-title-link" itemprop="url">Introduction to HOSS</a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-02-21 10:50:01" itemprop="dateCreated datePublished" datetime="2019-02-21T10:50:01-05:00">2019-02-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 10:15:16" itemprop="dateModified" datetime="2019-03-01T10:15:16-05:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="HOSS"><a href="#HOSS" class="headerlink" title="HOSS"></a>HOSS</h1><h3 id="Harry’s-Operating-System-Software"><a href="#Harry’s-Operating-System-Software" class="headerlink" title="Harry’s Operating System Software"></a>Harry’s Operating System Software</h3><p>This is my attempt at writing an operating system.  My ambitions are low.  They do not extend beyond learning, experimenting, and having fun.  Writing a full operating system has been something I’ve wanted to do for a long time, and for whatever reason I’ve finally decided to do so.</p>
+      
+
+      
+        
+          
+            <h1 id="HOSS"><a href="#HOSS" class="headerlink" title="HOSS"></a>HOSS</h1><h3 id="Harry’s-Operating-System-Software"><a href="#Harry’s-Operating-System-Software" class="headerlink" title="Harry’s Operating System Software"></a>Harry’s Operating System Software</h3><p>This is my attempt at writing an operating system.  My ambitions are low.  They do not extend beyond learning, experimenting, and having fun.  Writing a full operating system has been something I’ve wanted to do for a long time, and for whatever reason I’ve finally decided to do so.</p>
 <p>The original code was based on Nick Blundell’s unfinished book, “Writing a Simple Operating System – from Scratch”.  I found the pdf version online, and found it to be a good, relatively simple (as simple as writing an OS boot loader can be), and thorough introduction to getting an operating system booting on the i386 platform.  The boot code is largely based on this tutorial.</p>
 <p>Blundell’s work had two big problems, however.  First, and most importantly, it wasn’t completed.  In fact, he had entires in the table of contents that had no corresponding text.  Clearly he had meant to write more, but life intrudes for us all.</p>
 <p>The second big issue for me is that Blundell assumes the reader is using a Linux system.  I am using Mac OS, however.  Much of it worked out of the box (e.g., nasm), but other things did not  (e.g., linking multiple files).  For some of the issues, I was able to translate to the Mac, but it became more and more difficult.</p>
@@ -375,107 +1385,316 @@
 <p>Like Blundell, Fenelossa’s tutorial isn’t complete.  By the time you finish, you’ll have a booting OS that does basic screen output and can accept all-caps text input, but does nothing with it.  But it’s a very good start, and enough to get me working on a more complete kernel.</p>
 <p>With that done, I can discuss the basic layout of HOSS!</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://hculpan.github.io/hoss/2019/02/21/First-Post/" data-id="cjt3lxqss0002ukslwt7og380" class="article-share-link">Share</a>
+
+    
+
+    
+    
+    
+
+    
+
+    
       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
   
-</article>
+  
+  
+  </article>
 
+
+    
+  </section>
 
   
 
 
-</section>
+          </div>
+          
+
+        </div>
         
-          <aside id="sidebar">
+          
   
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/hoss/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/hoss/archives/2019/02/">February 2019</a></li></ul>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
 
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/hoss/2019/03/10/Managine-Memory/">Managing Memory and Bochs</a>
-          </li>
-        
-          <li>
-            <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/">How Much Memory Do I Have?</a>
-          </li>
-        
-          <li>
-            <a href="/hoss/2019/02/28/A-Command-Shell/">A Command Shell</a>
-          </li>
-        
-          <li>
-            <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/">Interfacing with the Keyboard</a>
-          </li>
-        
-          <li>
-            <a href="/hoss/2019/02/24/The-Screen-Device/">The Screen Device</a>
-          </li>
-        
-      </ul>
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Harry Culpan</p>
+              <p class="site-description motion-element" itemprop="description">This is a blog about my efforts to write a 32-bit operating system</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/hoss/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/hculpan" title="GitHub &rarr; https://github.com/hculpan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:harry@culpan.org" title="E-Mail &rarr; mailto:harry@culpan.org" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
     </div>
-  </div>
-
+  </aside>
   
-</aside>
+
+
         
       </div>
-      <footer id="footer">
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Harry Culpan</span>
+
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2019 Harry Culpan<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
+
   
-    <a href="/hoss/" class="mobile-nav-link">Home</a>
-  
-    <a href="/hoss/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    
 
+    
 
-  <link rel="stylesheet" href="/hoss/fancybox/jquery.fancybox.css">
-  <script src="/hoss/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/hoss/js/script.js"></script>
-
-
-
+    
   </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/hoss/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/hoss/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/hoss/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/hoss/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/hoss/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/hoss/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/hoss/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+
+  
+
+
+  <script src="/hoss/js/src/bootstrap.js?v=7.0.1"></script>
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
