@@ -35,9 +35,11 @@ void init_memory_manager() {
     memory_segments[0].type = TYPE_FREE;
     memory_segments[0].prev = 0;
 
-    struct Memory_Segment *last_segment = (void *)&memory_segments[0] + sizeof(struct Memory_Segment) + memory_segments[0].length;
+//    struct Memory_Segment *last_segment = (void *)&memory_segments[0] + sizeof(struct Memory_Segment) + memory_segments[0].length;
+    struct Memory_Segment *last_segment = (void *)memory_block.start_address + memory_block.length - sizeof(struct Memory_Segment);
     last_segment->type = TYPE_EOM;
     last_segment->length = 0;
+
     last_segment->prev = &memory_segments[0];
 
     num_segments = 2;

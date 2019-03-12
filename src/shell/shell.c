@@ -4,6 +4,7 @@
 #include "../drivers/screen.h"
 #include "../libc/string.h"
 #include "../kernel/memory.h"
+#include "../cpu/isr.h"
 
 #include "../kernel/mem_manager.h"
 
@@ -71,12 +72,27 @@ void process_command(char *buff) {
         allocateRam();
     } else if (strcmp(buff, "free") == 0) {
         freeRam();
+    } else if (strcmp(buff, "test") == 0) {
+        runTest();
     } else {
         kprint("-> ");
         kprint(buff);
     }
 
     buff[0] = '\0';
+}
+
+void runTest() {
+    for (int i = 0x100000; i < 1024*1024*1024; i++ ) {
+        char buff[10];
+        hex_to_ascii(i, buff);
+        kprint(buff);
+        kprint("\n");
+        if (isInt13Thrown()) {
+            kprint("Got exception!\n");
+            break;
+        }
+    }
 }
 
 void freeRam() {

@@ -13,6 +13,9 @@ all: os-image
 run: all
 	qemu-system-i386 -drive file=os-image,index=0,if=floppy,media=disk,format=raw -m 2g
 
+run-bochs: os-image
+	 bochs -f ./bochsrc -q
+
 os-image: src/boot/boot_sect.bin src/kernel/kernel.bin
 	cat $^ > os-image
 
@@ -33,7 +36,7 @@ clean:
 	rm -fr *.bin *.dis *.o os-image *.map *.img
 	rm -fr src/kernel/*.o src/boot/*.bin src/drivers/*.o src/cpu/*.o src/libc/*.o src/shell/*.o
 
-image:
+image: os-image
 	hdb -i os-image hoss-os.img
 
 kernel.dis: src/kernel/kernel.bin

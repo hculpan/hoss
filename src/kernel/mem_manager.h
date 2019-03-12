@@ -25,5 +25,6 @@ unsigned int get_os_memory();
 unsigned int get_user_memory();
 
 void *allocate(const unsigned int size);
+void free(const void *ptr);
 
 #endif

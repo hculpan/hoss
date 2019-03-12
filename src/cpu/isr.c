@@ -8,6 +8,12 @@
 
 isr_t interrupt_handlers[256];
 
+static char got_int13 = 0;
+
+char isInt13Thrown() {
+    return got_int13;
+}
+
 /* Can't do this with a loop because we need the address
  * of the function names */
 void isr_install() {
@@ -124,6 +130,10 @@ void isr_handler(registers_t r) {
     kprint("\n");
     kprint(exception_messages[r.int_no]);
     kprint("\n");
+
+    if (r.int_no == 13) {
+        got_int13 = 1;
+    }
 }
 
 void register_interrupt_handler(u8 n, isr_t handler) {
