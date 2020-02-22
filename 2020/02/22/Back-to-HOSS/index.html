@@ -96,24 +96,27 @@
 
 
 
-  <meta name="description" content="Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.">
+  <meta name="description" content="So it’s been about a year since the last time I worked on HOSS, and I’ve decided to startplaying around with it again. The first issue I faced was that my toolchain no longer worked.  When I went to r">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Managing Memory and Bochs">
-<meta property="og:url" content="http://hculpan.github.io/hoss/2019/03/10/Managine-Memory/index.html">
+<meta property="og:title" content="Back to HOSS">
+<meta property="og:url" content="http://hculpan.github.io/hoss/2020/02/22/Back-to-HOSS/index.html">
 <meta property="og:site_name" content="HOSS">
-<meta property="og:description" content="Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.">
+<meta property="og:description" content="So it’s been about a year since the last time I worked on HOSS, and I’ve decided to startplaying around with it again. The first issue I faced was that my toolchain no longer worked.  When I went to r">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-22T16:49:41.535Z">
+<meta property="og:image" content="http://hculpan.github.io/hoss/2020/02/22/Back-to-HOSS/images/alloc.png">
+<meta property="og:image" content="http://hculpan.github.io/hoss/2020/02/22/Back-to-HOSS/images/alloc_and_free.png">
+<meta property="og:updated_time" content="2020-02-22T23:58:25.091Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Managing Memory and Bochs">
-<meta name="twitter:description" content="Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.">
+<meta name="twitter:title" content="Back to HOSS">
+<meta name="twitter:description" content="So it’s been about a year since the last time I worked on HOSS, and I’ve decided to startplaying around with it again. The first issue I faced was that my toolchain no longer worked.  When I went to r">
+<meta name="twitter:image" content="http://hculpan.github.io/hoss/2020/02/22/Back-to-HOSS/images/alloc.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://hculpan.github.io/hoss/2019/03/10/Managine-Memory/">
+  <link rel="canonical" href="http://hculpan.github.io/hoss/2020/02/22/Back-to-HOSS/">
 
 
 
@@ -123,7 +126,7 @@
   };
 </script>
 
-  <title>Managing Memory and Bochs | HOSS</title>
+  <title>Back to HOSS | HOSS</title>
   
 
 
@@ -292,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/03/10/Managine-Memory/">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2020/02/22/Back-to-HOSS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Harry Culpan">
@@ -309,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Managing Memory and Bochs
+          <h1 class="post-title" itemprop="name headline">Back to HOSS
 
               
             
@@ -335,24 +338,12 @@
                 
               
 
-              <time title="Created: 2019-03-10 10:34:21" itemprop="dateCreated datePublished" datetime="2019-03-10T10:34:21-05:00">2019-03-10</time>
+              <time title="Created: 2020-02-22 18:23:26 / Modified: 18:58:25" itemprop="dateCreated datePublished" datetime="2020-02-22T18:23:26-05:00">2020-02-22</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-02-22 11:49:41" itemprop="dateModified" datetime="2020-02-22T11:49:41-05:00">2020-02-22</time>
               
             
           </span>
@@ -386,18 +377,16 @@
       
 
       
-        <p>Over the last week or so, I’ve been working on a memory manager.  It was the next fundamental step for my kernel, something I really needed to do before anything else, so I was anxious to get it done.</p>
-<p>My first effort didn’t work out that well and, in retrospect, was pretty stupid.  If you recall from my prior post, I had gotten the system memory map.  This gave me a view on what memory was available and what wasn’t.  The way it appeared, all memory above 1mb was available in one continguous chunk, while below 1mb it was more fragmented.  So I made the easy choice that for heap memory, I would ignore everything below 1mb.</p>
-<p>With that decided, I started in to writing my memory manager.  I created a structure called <code>Memory_Segment</code> that had basic information: The starting address of a segment, length, type (for the moment, just free, system, or user), and pointers to the left and right segment descriptor.  Deciding that I would limit allocation to 4k segments, I created a solid block of memory to store an array of these, with enough memory allocated to manage the entire available memory.  This block started at 1mb, with the actual free ram located above this system block.</p>
-<p>This was a very poor approach though.  I had an array of structures, but because I wanted to do a buddy allocation scheme, I was also treating them as a tree.  Mixing a dynamic tree structure with an array was a bad idea, and predictably it failed.  I could allocate memory pretty easily, but freeing became onerous.</p>
-<p>After a good night’s sleep, I decided to scrap what I had and start over.  I came up with a far more rational - and, I suspect, more standard - approach.  Rather than storing the segment discriptor in a block set aside for that purpose, I decided to store the descriptor with the allocated memory as a header.  So I altered my descriptor structure to a simpler and shorter format, containing just the length, type, and pointer to previous.  My pointer to next could be calculated by simpling added the address of the descriptor with the size of the structure and length of that memory block.  This gave me a linked list of memory blocks, and made writing a first fit allocator pretty straightforward.  The only other thing I had to do was add a descriptor with type TYPE_EOM and length of 0 at the end of memory, which gave me a clean marker to end the list.</p>
-<h3 id="Bochs"><a href="#Bochs" class="headerlink" title="Bochs"></a>Bochs</h3><p>So far, I’ve been using QEMU almost exclusively for development, with a little testing in VirtualBox and an attempt in VMWare Fusion.  In the last, I get a CPU fault, which I’ve not bothered to try to track down yet.  With VirtualBox, I get a very different error.  Everything works, but it seems to lose some keyboard strokes.  I can type a letter and sometimes it works and sometimes nothing happens.</p>
-<p>I didn’t think too much about it, as everything worked just great in QEMU.  But for some reason I decided to get Bochs to work.  The issue with Bochs, for those who haven’t used it, is there doesn’t seem to be a simple way to start.  Obviously there’s the documentation, but for someone who’s trying to get something done, this is pretty onerous.  I finally found a video that discussed about editing and saving properties, and then another that discussed basic commands.  So with that, I pretty quickly had Bochs up and running with my os image.</p>
-<p>But the thing was, it had the same keyboard behavior as I saw in VirtualBox.  When I ignored it earlier with VirtualBox, I kind of wrote it off to, “It works in QEMU, but not in VB, but I don’t know which one is more correct behavior.  So worry about it later.”  But with Bochs acting like VB, that kind of suggested that QEMU was probably not accurate.</p>
-<p>I spent a while trying to track it down, and of course went straight to my interrupt handler routine for the keyboard.  At the moment, my keyboard device driver does two very basic things.  It manages the state of the Shift, Ctrl, and Alt keys, and it maps scancodes to ASCII characters.  It has two basic external methods, <code>waitForAscii</code> and <code>waitForScancode</code>.  Both are blocking, and they just loop until a key is pressed.  Obviously this won’t be sufficient in the long term, but it meets my needs for now.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">char waitForAscii() &#123;</span><br><span class="line">    char result = 0;</span><br><span class="line">    while (!result) &#123;</span><br><span class="line">        result = last_ascii;</span><br><span class="line">        last_ascii = 0;</span><br><span class="line">        last_scancode = 0;</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>This is pretty simple.  The only thing that might need some explanation is the <code>last_ascii</code> and the <code>last_scancode</code> variables.  These are just driver-level variables that are set by the interrupt handler to the scancode and the mapped ascii code, if it maps to ascii.  Appropriate use of kprint statements allows me to eliminate the interrupt handler, so I came to this function next.  It took me a bit of thought, but I finally realized what was going on.  The interrupt handler could fire at any point in this function, including in between, say, the setting of <code>result</code> and resetting <code>last_ascii</code>.  This is, of course, very similar to problems with multithreading code, so I really should have seen this right away.  In any case, the answer was reasonably simple.  Just disable and enable interrupts at the appropriate times, as so:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">while (!result) &#123;</span><br><span class="line">    asm volatile(&quot;cli&quot;);</span><br><span class="line">    result = last_ascii;</span><br><span class="line">    last_ascii = 0;</span><br><span class="line">    last_scancode = 0;</span><br><span class="line">    asm volatile(&quot;sti&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>So now keyboard input works consistently in QEMU, VirtualBox, and Bochs.</p>
-<p>But all is still not golden.  There’s still the CPU fault in VMWare Fusion, of course, though for the moment I’m willing to ignore this.  More concerning is that I have a memory allocation problem with VB.  Right now, I have a little test in my shell that allows me to type <code>alloc</code> and it will just allocate 4k on the heap and display the resulting memory segment chain.  On QEMU and Bochs, I can seemingly do this all day long with no problem.  On VB, it locks up and often prints strange things on the screen.  A new problem to look at, but that’s for another post.</p>
+        <p>So it’s been about a year since the last time I worked on HOSS, and I’ve decided to start<br>playing around with it again.</p>
+<p>The first issue I faced was that my toolchain no longer worked.  When I went to rebuild HOSS,<br>I got an error from GCC that it could not find a library that it needed.  As you may remember,<br>I was following a tutorial by <a href="https://github.com/cfenollosa/os-tutorial" target="_blank" rel="noopener">Carlos Fenollosa</a> that<br>was specific to writing on OS on a Mac.  Among the various steps, he talked about building a<br>cross-compiling version of GCC.  The version he used was 4.9, but I used a slightly later version,<br>6.x, for my initial HOSS work.  Even at the time I did this, GCC had advanced well beyond version<br>6, but I specifically chose to use an older version.  I don’t quite remember why, other than<br>a vague notion that for some reason later versions of GCC wouldn’t work.  I don’t recall why<br>I thought this, but that’s why I stuck with such an old version.</p>
+<p>Well, when I got the missing library error, I was kind of screwed.  After doing some Googling, I<br>didn’t come up with anything definitive, but I got the impression that the library disappeared<br>when I upgraded my version of mac OS.  So I decided to switch to the latest GCC.  I downloaded<br>version 9.2, followed Fenollosa’s instructions, and with only a few hiccups, everything worked.<br>The hiccups came from three libraries which I had installed with Brew, but their headers and<br>libs weren’t in the normal include/lib paths.  Fortunately the build process told me what to<br>do, which was pass in some extra parameters, and once I did that everything worked.</p>
+<p>So with my toolchain once again functioning, I rebuilt HOSS and started working on it again.</p>
+<p>The next issue I ran into was that apparently my Bochs configuration was screwed up.  It was<br>pointing to a file, <code>hoss-os</code>.img, but I had at some point switched to using the name, <code>os-image,</code><br>as my bootable image file.  But apparently I hadn’t run a clean, so an older version of<br><code>hoss-os.img</code> was still hanging around.  This means that apparently I was running an outdated version of HOSS in Bochs.  This wasn’t a huge deal, as I did most of my testing in QEMU anyway, but I was curious how I hadn’t caught this before.  But I just changed the filename in my Bochs config, and everything was running again.</p>
+<h2 id="Memory-Managerment"><a href="#Memory-Managerment" class="headerlink" title="Memory Managerment"></a>Memory Managerment</h2><p>So where I stopped before was in the middle of working on my memory manager.  I had written a simple memory manager using a simple First Fit algorithm, but I hadn’t thoroughly tested it.  I have a command shell program.  It does very little, just presents a command prompt where you can type anything.  And it only supports a few commands, none of them actually useful for anything other than testing my memory manager.  Two commands, <code>alloc</code> and <code>free</code>, simply allocate 4k of ram and then free it.  You could call <code>alloc</code> multiple times, and it would allocate multiple 4k blocks, and it would display the allocated segment blocks.<br><img src="images/alloc.png" alt><br>The problem was that <code>free</code> would only free the last allocated block of memory.  But that wouldn’t test all the scenarios that I needed to test, of course.  So my first change was to make it so that it would free the allocated blocks in reverse order, i.e., you could call it multiple times and it would free the allocated blocks in the reverse order of how you allocated them.  Doing so and running some tests proved that my memory manager could allocate and free blocks without losing track.</p>
+<p>But this didn’t really cover a more real world scenario, of course.  I didn’t know what would happen if I, say, allocated three blocks, and then freed the one in the middle.  The next time I allocated a 4k block, would it pick the one in the middle?  Would it add it to the end, skipping the empty block?  I needed to be able to arbitrarily free any memory block in whatever oder I chose.</p>
+<p>This took more work than I expected.  The first issue was that my simple command interpreter really just did simple string matching to execute commands.  This meant that it couldn’t support parameters, other than where the parameter was essentially part of the command.  For example, I had a command called <code>memmap</code> which would show me the memory map of usable memory that the system provided.  But I also had <code>memmap full</code>, which would also show unusable/reserved memory.  But this parameter was just done through simple string matching.  There was no real parsing going on.  But to get <code>free</code> to do what I needed, I would have to do some parsing.</p>
+<p>Not a big deal, of course, but one of the aspects of writing your own operating system is that you have no library of functions to fall back on except whatever you write.  So deciding that <code>free</code> would accept an optional numeric parameter, which would be the index of the block you wanted to free, I ended up having to write my own versions of <code>strtok</code> and <code>atoi</code> and added these to my libc module.</p>
+<p>Once I did that, updating my command shell was pretty simple, so that now I could do this:<br><img src="images/alloc_and_free.png" alt></p>
 
       
     </div>
@@ -428,8 +417,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/" rel="next" title="How Much Memory Do I Have?">
-                <i class="fa fa-chevron-left"></i> How Much Memory Do I Have?
+              <a href="/hoss/2019/03/10/Managine-Memory/" rel="next" title="Managing Memory and Bochs">
+                <i class="fa fa-chevron-left"></i> Managing Memory and Bochs
               </a>
             
           </div>
@@ -437,10 +426,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/hoss/2020/02/22/Back-to-HOSS/" rel="prev" title="Back to HOSS">
-                Back to HOSS <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -575,7 +560,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bochs"><span class="nav-number">1.</span> <span class="nav-text">Bochs</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Memory-Managerment"><span class="nav-number">1.</span> <span class="nav-text">Memory Managerment</span></a></li></ol></div>
             
 
           </div>
