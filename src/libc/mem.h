@@ -1,7 +1,7 @@
 #ifndef MEM_H
 #define MEM_H
 
-#include "../cpu/types.h"
+#include "types.h"
 
 void memcpy(void *dest, const void *source, int no_bytes);
 
