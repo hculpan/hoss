@@ -6,14 +6,24 @@ Harry's Operating System Software
 make
 ```
 
-### To Run
+### To Run in QEMU
 By default, it is setup to run in qemu.
+```
+make run
+```
+
+### To Run in Bochs
+HOSS can also be booted in Bochs.  To do so (assuming Bochs is installed):
+```
+make run-bochs
+```
+After Bochs starts, type `c` to actually run HOSS.
 
 ### To Install
 ```
 make image
 ```
-This will make a virtual disk image, hoss-os.img, that you can use in either VMWare or VirtualBox or any other
+This will make a virtual disk image, os-image, that you can use in either VMWare or VirtualBox or any other
 virtualization solution that supports the i386 architecture.
 
 ## Blogging

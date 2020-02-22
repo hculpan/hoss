@@ -32,7 +32,7 @@ char waitForAscii() {
     return result;
 }
 ```
-This is pretty simple.  The only thing that might need some explanation is the `last_ascii` and the `last_scancode` variables.  These are just driver-level variables that are set by the interrupt handler to the scancode and the mapped ascii code, if it maps to ascii.  Appropriate use of kprint statements allows me to eliminate the interrupt handler, so I can to this function next.  It took me a bit of thought, but I finally realized what was going on.  The interrupt handler could fire at any point in this function, including in between, say, the setting of `result` and resetting `last_ascii`.  This is, of course, very similar to problems with multithreading code, so I really should have seen this right away.  In any case, the answer was reasonably simple.  Just disable and enable interrupts at the appropriate times, as so:
+This is pretty simple.  The only thing that might need some explanation is the `last_ascii` and the `last_scancode` variables.  These are just driver-level variables that are set by the interrupt handler to the scancode and the mapped ascii code, if it maps to ascii.  Appropriate use of kprint statements allows me to eliminate the interrupt handler, so I came to this function next.  It took me a bit of thought, but I finally realized what was going on.  The interrupt handler could fire at any point in this function, including in between, say, the setting of `result` and resetting `last_ascii`.  This is, of course, very similar to problems with multithreading code, so I really should have seen this right away.  In any case, the answer was reasonably simple.  Just disable and enable interrupts at the appropriate times, as so:
 ```
     while (!result) {
         asm volatile("cli");
