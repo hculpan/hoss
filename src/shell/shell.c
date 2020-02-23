@@ -173,7 +173,7 @@ void allocateRam()
     else
     {
         last_ptr[++index] = ptr;
-        kprint("Got it!  Starting address: ");
+        kprint("Starting address: ");
         char buff[20];
         hex_to_ascii_padded(ptr, buff, 16);
         kprint(buff);

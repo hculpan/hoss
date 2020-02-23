@@ -9,6 +9,7 @@
 *.elf
 *.bin
 os-image
+hoss-os.img
 
 # Linker output
 *.ilk
