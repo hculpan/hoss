@@ -1,6 +1,10 @@
 # HOSS
 Harry's Operating System Software
 
+This is based on two main sources, Nick Blundell’s unfinished book, “Writing a Simple Operating System – from Scratch”, and Carlos Fenollosa's online tutorial, which is specifically tailored to the Mac.  You can find it at https://github.com/cfenollosa/os-tutorial.
+
+For more information and to see my progress, check out the project blog at http://code.culpan.org/hoss/.
+
 ### To Build
 ```
 make
@@ -23,7 +27,7 @@ After Bochs starts, type `c` to actually run HOSS.
 ```
 make image
 ```
-This will make a virtual disk image, os-image, that you can use in either VMWare or VirtualBox or any other
+This will make a virtual disk image, hoss-os.img, that you can use in either VMWare or VirtualBox or any other
 virtualization solution that supports the i386 architecture.
 
 ## Blogging
