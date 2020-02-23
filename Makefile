@@ -13,7 +13,7 @@ all: os-image
 run: all
 	qemu-system-i386 -drive file=os-image,index=0,if=floppy,media=disk,format=raw -m 2g
 
-run-bochs: os-image
+run-bochs: image
 	 bochs -f ./bochsrc -q
 
 os-image: src/boot/boot_sect.bin src/kernel/kernel.bin
