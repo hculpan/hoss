@@ -96,24 +96,24 @@
 
 
 
-  <meta name="description" content="As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple">
+  <meta name="description" content="I’ve been giving the topic of memory management and suballocators quite a bit of thought.  My initial thought was to write a chunk allocator at the OS level, and then a suballocator at the application">
 <meta property="og:type" content="article">
-<meta property="og:title" content="A Command Shell">
-<meta property="og:url" content="http://hculpan.github.io/hoss/2019/02/28/A-Command-Shell/index.html">
+<meta property="og:title" content="To suballocate or not">
+<meta property="og:url" content="http://hculpan.github.io/hoss/2020/02/24/To-suballocate-or-not/index.html">
 <meta property="og:site_name" content="HOSS">
-<meta property="og:description" content="As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple">
+<meta property="og:description" content="I’ve been giving the topic of memory management and suballocators quite a bit of thought.  My initial thought was to write a chunk allocator at the OS level, and then a suballocator at the application">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-01T15:16:24.746Z">
+<meta property="og:updated_time" content="2020-02-24T15:28:28.154Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="A Command Shell">
-<meta name="twitter:description" content="As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple">
+<meta name="twitter:title" content="To suballocate or not">
+<meta name="twitter:description" content="I’ve been giving the topic of memory management and suballocators quite a bit of thought.  My initial thought was to write a chunk allocator at the OS level, and then a suballocator at the application">
 
 
 
 
 
 
-  <link rel="canonical" href="http://hculpan.github.io/hoss/2019/02/28/A-Command-Shell/">
+  <link rel="canonical" href="http://hculpan.github.io/hoss/2020/02/24/To-suballocate-or-not/">
 
 
 
@@ -123,7 +123,7 @@
   };
 </script>
 
-  <title>A Command Shell | HOSS</title>
+  <title>To suballocate or not | HOSS</title>
   
 
 
@@ -292,7 +292,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2019/02/28/A-Command-Shell/">
+    <link itemprop="mainEntityOfPage" href="http://hculpan.github.io/hoss/hoss/2020/02/24/To-suballocate-or-not/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Harry Culpan">
@@ -309,7 +309,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">A Command Shell
+          <h1 class="post-title" itemprop="name headline">To suballocate or not
 
               
             
@@ -335,24 +335,12 @@
                 
               
 
-              <time title="Created: 2019-02-28 16:16:19" itemprop="dateCreated datePublished" datetime="2019-02-28T16:16:19-05:00">2019-02-28</time>
+              <time title="Created: 2020-02-24 10:15:04 / Modified: 10:28:28" itemprop="dateCreated datePublished" datetime="2020-02-24T10:15:04-05:00">2020-02-24</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-03-01 10:16:24" itemprop="dateModified" datetime="2019-03-01T10:16:24-05:00">2019-03-01</time>
               
             
           </span>
@@ -386,12 +374,11 @@
       
 
       
-        <p>As I mentioned in my last post, the keyboard driver that Fenollosa gave in his tutorial had basic test code that would track a buffer, output the keys as pressed to the display, and process the simple command <code>END</code>.  I refactored that code to move it out of the keyboard driver, paring it down just to what was needed to support the keyboard.  While at this point I obviously don’t have applications or a way for them to call an OS-level API, I still wanted to encapsulate the keyboard so that it would be simple for calling processes to access.</p>
-<p>The result of this is that I refactored all the extraneous code out of the keyboard driver, and originally gave it a new home in the <code>kernel_main</code> function.  But obviously this really isn’t part of the kernel.</p>
-<p>I created a new directory, <code>shell</code>, with a new main file, <code>shell.c</code>.  Thus I started the beginning of my OS’s main command shell.  </p>
-<p>Right now, it’s not much.  It still has the same little typewriter-like functionality that the original keyboard driver had.  But I’ve added a command, <code>scancode</code>, that will put the shell into a mode where it will output the scancode of whatever character is pressed or released.</p>
-<p>While doing this, I also went ahead and addressed some of the shortcomings of my keyboard driver.  I added a <code>waitForScancode</code> function, so a user program can get any key.  I also added flags for the Ctrl, Alt, and CapsLock keys.  The Caps Lock key turned out to be a bit more difficult than I had anticipated.  Unlike the other keys, the Caps Lock really only effects a subset of keys, <code>a</code> through <code>z</code>.  But the numeric keys, for example, aren’t effected.  Even further, if you have Caps Lock enabled but then hold Shift, that reverts a letter to lowercase.  None of this is inherent to the keyboard, of course, and I could have chosen to do it differently in my OS, but I’m a strong believer in standard keyboards.  One of my biggest annoyances when playing with old computers like the Apple II and Commodore 64 is their non-standard keyboards.  So to fully support all this functionality turned out to be a bit trickier than I thought.  My scancode-to-ASCII conversion logic probably doubled in size.  But it wasn’t that big to begin with, so it’s not a big deal.  Just took a number of code-compile-test cycles to finally get it all right.</p>
-<p>The only things left on the keyboard driver are to turn off the Caps Lock indicator on startup (right now, the driver assumes Caps Lock is off), and add application functions for polling.</p>
+        <p>I’ve been giving the topic of memory management and suballocators quite a bit of thought.  My initial thought was to write a chunk allocator at the OS level, and then a suballocator at the application level.  But I’m beginning to think that’s the wrong approach.  There’s the old programmer’s saying, “Premature optimization is the root of all evil.”  And I think that applies here.</p>
+<p>My memory manager has a lot of areas for optimization.  It has a 9-byte header, for example.  Now this is fine if you’re allocating a large chunk of ram, but what if you’re just wanting a pointer to a character or boolean?  That’s 900% overhead.  And then there’s the issue that it’s all in a big linked list, so every tie you want to allocate memory, it’s got to walk through the list until it finds the first segment that fits what you need.  And, of course, the First Fit algorithm is absolutely going to lead to memory fragmentation so that it will become less efficient as time goes.</p>
+<p>But here’s the thing.  The 900% overhead may sound bad, but how often do you want a pointer to a byte or a char?  Not very often.  Sure, you may frequently want a pointer to an array of characters, but that’s a larger chunk so the overhead goes down.  It’s a 9 byte header no matter how large the chunk you’re allocating, so a 20 character string, for example, is now taking up 29 bytes, which means it’s less than 50% for overhead.  Still high, sure, but as the data structures get larger, the overhead goes down.</p>
+<p>And then there’s the other thing.  This is a toy project.  HOSS will never see production use, and it is highly unlikely it will be used by anyone other than myself.  And the size of the applications that will ever run on it will not likely ever be large enough that it will run out of ram even with the large overhead.</p>
+<p>So for now I’m thinking I will just stick with my memory manager as is, and if the time comes that it’s not working well enough, I can go back and optimize it then.</p>
 
       
     </div>
@@ -422,8 +409,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/hoss/2019/02/27/Interfacing-with-the-Keyboard/" rel="next" title="Interfacing with the Keyboard">
-                <i class="fa fa-chevron-left"></i> Interfacing with the Keyboard
+              <a href="/hoss/2020/02/22/Back-to-HOSS/" rel="next" title="Back to HOSS">
+                <i class="fa fa-chevron-left"></i> Back to HOSS
               </a>
             
           </div>
@@ -431,10 +418,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/hoss/2019/03/01/How-Much-Memory-Do-I-Have/" rel="prev" title="How Much Memory Do I Have?">
-                How Much Memory Do I Have? <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
