@@ -10,23 +10,23 @@
 
 static char displayScancode = 0;
 
-static void *last_ptr[100];
+static struct Memory_Segment *last_ptr[100];
 static int index = -1;
 
 void process_command(char *buff);
+char **parse_command(char *buff, size_t *max_elements);
 void displayUsableMemory();
 void displayFullMemory();
 void displayMemoryMap(int dtype);
 void displayMemorySegments();
 void displayMemory();
-void allocateRam();
+void allocateRam(char *buff);
 
 void start_shell()
 {
-    kprint("Type something!\n");
     kprint("> ");
 
-    char buff[256];
+    char buff[255];
     char str[2];
     str[1] = '\0';
     while (1)
@@ -67,6 +67,29 @@ void start_shell()
     }
 }
 
+char **parse_command(char *buff, size_t *max_elements)
+{
+    size_t num_elements = 0;
+    char **result = allocate(sizeof(char *) * *max_elements);
+    for (int i = 0; i < *max_elements; i++)
+    {
+        result[i] = NULL;
+    }
+
+    for (int i = 0; i < *max_elements; i++)
+    {
+        if (i == 0)
+            result[i] = strtok(buff, ' ');
+        else
+            result[i] = strtok(NULL, ' ');
+        if (!result[i])
+            break;
+        num_elements++;
+    }
+    *max_elements = num_elements;
+    return result;
+}
+
 void process_command(char *buff)
 {
     if (strcmp(buff, "scancode") == 0)
@@ -90,9 +113,9 @@ void process_command(char *buff)
     {
         displayMemorySegments();
     }
-    else if (strcmp(buff, "alloc") == 0)
+    else if (strncmp(buff, "alloc", 5) == 0)
     {
-        allocateRam();
+        allocateRam(buff);
     }
     else if (strncmp(buff, "free", 4) == 0)
     {
@@ -129,43 +152,62 @@ void runTest()
 
 void freeRam(char *buff)
 {
-    int mem_block = -1;
+    int mem_block = 0;
 
     if (index < 0)
         return;
 
-    char *tok = strtok(buff, ' ');
-    size_t tok_index = 0;
-    while (tok)
-    {
-        if (tok_index == 1)
-        {
-            mem_block = atoi(tok);
-            kprint(tok);
-            kprint("\n");
-        }
-        tok = strtok(NULL, ' ');
-        tok_index++;
-    }
+    size_t num_elements = 10;
+    char **opts = parse_command(buff, &num_elements);
 
-    if (mem_block >= 0)
+    switch (num_elements)
     {
-        free(last_ptr[mem_block]);
-        last_ptr[mem_block] = 0;
+    case 1:
+        mem_block = 0;
+        break;
+    case 2:
+        mem_block = atoi(opts[1]);
+        break;
+    default:
+        kprint("Invalid parameter count for 'free'");
+        return;
     }
-    else
-    {
-        free(last_ptr[index]);
-        last_ptr[index--] = 0;
-    }
+    free(opts);
+
+    if (last_ptr[mem_block]->type == TYPE_USER)
+        free((void *)last_ptr[mem_block] + sizeof(struct Memory_Segment));
 
     displayMemory();
     displayMemorySegments();
 }
 
-void allocateRam()
+void allocateRam(char *buff)
 {
-    void *ptr = allocate(4096);
+    u32 mem_size = 4096;
+    size_t num_elements = 10;
+    char **opts = parse_command(buff, &num_elements);
+    char buffer[255];
+    char buffer2[20];
+
+    switch (num_elements)
+    {
+    case 1:
+        break;
+    case 2:
+        mem_size = atoi(opts[1]);
+        break;
+    default:
+        mem_size = 12;
+        strcpy(buff, "alloc");
+        int_to_ascii(buff, buffer2);
+        kprint(buffer2);
+        printf("Invalid parameter count for '%s' %d blah %d\n", buff, mem_size, num_elements);
+        free(opts);
+        return;
+    }
+    free(opts);
+
+    void *ptr = allocate(mem_size);
     if (!ptr)
     {
         kprint("Uh-oh!\n");
@@ -195,15 +237,19 @@ void displayMemoryValue(unsigned int value, char *descr)
 
 void displayMemorySegments()
 {
+    for (int i = 0; i < 100; i++)
+        last_ptr[i] = NULL;
+
     struct Memory_Segment *curr = get_segments();
 
     kprint("Memory Segments:\n");
     char buff[50];
     kprint("           start                length          type\n");
-    while (1)
+    for (int i = 0; i < 100; i++)
     {
         kprint("   ");
         hex_to_ascii_padded((unsigned long)curr, buff, 16);
+        last_ptr[i] = curr;
         kprint("[ ");
         kprint(buff);
         kprint(" : ");
@@ -231,9 +277,7 @@ void displayMemorySegments()
         kprint("\n");
 
         if (curr->type == TYPE_EOM)
-        {
             break;
-        }
 
         curr = (struct Memory_Segment *)((void *)curr + curr->length + sizeof(struct Memory_Segment));
     }
@@ -243,9 +287,9 @@ void displayMemorySegments()
 void displayMemory()
 {
     displayMemoryValue(get_total_memory(), "Total Memory: ");
-    displayMemoryValue(get_os_memory(), "  System : ");
-    displayMemoryValue(get_user_memory(), "  User   : ");
-    displayMemoryValue(get_free_memory(), "  Free   : ");
+    displayMemoryValue(get_os_memory(), "  System overhead: ");
+    displayMemoryValue(get_user_memory(), "  User           : ");
+    displayMemoryValue(get_free_memory(), "  Free           : ");
 }
 
 void displayMemoryMap(int dtype)

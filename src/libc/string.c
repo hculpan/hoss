@@ -126,7 +126,7 @@ void reverse(char s[])
 }
 
 /* K&R */
-int strlen(const char s[])
+size_t strlen(const char s[])
 {
     int i = 0;
     while (s[i] != '\0')
@@ -278,4 +278,88 @@ char *strtok(char *input, const char delim)
     lastIndex = i + 1;
 
     return start;
+}
+
+int indexof(char *str, char c, int startindex)
+{
+    int len = strlen(str);
+    if (startindex >= len || startindex < 0)
+        return -1;
+
+    for (int i = startindex; i < len; i++)
+    {
+        if (str[i] == c)
+            return i;
+    }
+
+    return -1;
+}
+
+size_t _sprintf(char *str, const char *format, void *args)
+{
+    char buff[20];
+    size_t len = strlen(format);
+    size_t idx_format, idx_str = 0;
+    s32 num;
+    for (idx_format = 0; idx_format < len; idx_format++)
+    {
+        if (format[idx_format] != '%')
+            str[idx_str++] = format[idx_format];
+        else if (format[idx_format + 1] != '\0')
+        {
+            switch (format[idx_format + 1])
+            {
+            case 'd':
+                num = *((s32 *)args);
+                args += sizeof(s32);
+                int_to_ascii(num, buff);
+                str[idx_str] = '\0';
+                strcat(str, buff);
+                idx_str += strlen(buff);
+                break;
+
+            case 's':
+                str[idx_str] = '\0';
+                kprint("debug:");
+                kprint(str);
+                // kprint(args);
+                int_to_ascii((s32)args, buff);
+                kprint(buff);
+                kprint(":");
+                strcat(str, (char *)args);
+                idx_str += strlen((char *)args);
+                args += sizeof(char *);
+                break;
+
+            case '%':
+                str[idx_str++] = '%';
+                break;
+
+            default:
+                break;
+            }
+            idx_format += 1;
+        }
+        else
+            str[idx_str++] = format[idx_format];
+    }
+
+    str[idx_str] = '\0';
+
+    return strlen(str);
+}
+
+size_t sprintf(char *str, const char *format, ...)
+{
+    void *p = (void *)&format + sizeof format;
+    return _sprintf(str, format, p);
+}
+
+size_t printf(const char *format, ...)
+{
+    void *p = (void *)&format + sizeof format;
+    char buff[255];
+    size_t size = _sprintf(buff, format, p);
+    kprint(buff);
+    return size;
 }

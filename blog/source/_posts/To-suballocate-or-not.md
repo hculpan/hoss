@@ -9,6 +9,6 @@ My memory manager has a lot of areas for optimization.  It has a 9-byte header, 
 
 But here's the thing.  The 900% overhead may sound bad, but how often do you want a pointer to a byte or a char?  Not very often.  Sure, you use chars, bytes, and booleans all the time, but usually it's a local variable.  You don't usually want them on the heap.  It's usually only arrays of these types that you'd allocate dynamically, and then it's a 9 byte overhead for the whole chunk, not each individual element.  Structs, of course, present a bit more complication, since one will often want to dynamically construct these individually, but it's really only the smallest of these that will present any issues.  
 
-But really let's be realistic here.  This is a toy project.  HOSS will never see production use, and it is highly unlikely it will be used by anyone other than myself.  And the size of the applications that will ever run on it will not likely ever be large enough that it will run out of ram even with the large overhead.
+But let's be realistic here.  This is a toy project.  HOSS will never see production use, and it is highly unlikely it will be used by anyone other than myself.  And the size of the applications that will ever run on it will not likely ever be large enough that it will run out of ram even with the large overhead.
 
 So for now I'm thinking I will just stick with my memory manager as is, and if the time comes that it's not working well enough, I can go back and optimize it then.

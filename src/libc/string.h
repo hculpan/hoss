@@ -13,7 +13,7 @@ void pretty_number(char *input);
 
 void reverse(char s[]);
 
-int strlen(const char s[]);
+size_t strlen(const char s[]);
 
 void append(char s[], char n);
 
@@ -38,5 +38,14 @@ void trim_trailing(char *s);
 char isspace(char c);
 
 char *strtok(char *input, const char delim);
+
+/*
+    Only supports %d, %%, and %s at the moment
+*/
+size_t sprintf(char *str, const char *format, ...);
+
+size_t printf(const char *format, ...);
+
+int indexof(char *str, char c, int startindex);
 
 #endif

@@ -167,6 +167,9 @@ void *allocate(const size_t size)
 void free(const void *ptr)
 {
     struct Memory_Segment *seg = (void *)ptr - sizeof(struct Memory_Segment);
+    if (seg->type == TYPE_EOM)
+        return;
+
     seg->type = TYPE_FREE;
 
     // Now let's see if neighboring segments are free
